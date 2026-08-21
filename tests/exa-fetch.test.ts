@@ -1,4 +1,5 @@
 import * as fs from "node:fs";
+import * as http from "node:http";
 import * as os from "node:os";
 import * as path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -17,18 +18,116 @@ describe("src/providers/exa/fetch (live Exa MCP)", () => {
   let tmpDir: string;
   let prevAgentDir: string | undefined;
   let prevTimeout: string | undefined;
+  let server: http.Server;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-exa-fetch-test-"));
     prevAgentDir = process.env.PI_AGENT_DIR;
     process.env.PI_AGENT_DIR = tmpDir;
     prevTimeout = process.env.EXA_FETCH_TIMEOUT_MS;
     delete process.env.EXA_MCP_ENDPOINT;
     delete process.env.EXA_API_KEY;
+
+    server = http.createServer((req, res) => {
+      if (req.method === "GET") {
+        res.writeHead(200, { "content-type": "text/event-stream" });
+        res.write(": connected\n\n");
+        return;
+      }
+      if (req.method === "POST") {
+        let body = "";
+        req.on("data", (chunk: string) => {
+          body += chunk;
+        });
+        req.on("end", () => {
+          let message: any;
+          try {
+            message = JSON.parse(body);
+          } catch {
+            res.writeHead(400, { "content-type": "application/json" });
+            res.end(
+              JSON.stringify({
+                jsonrpc: "2.0",
+                id: null,
+                error: { code: -32700, message: "Parse error" },
+              })
+            );
+            return;
+          }
+          if (message.method === "initialize") {
+            res.writeHead(200, { "content-type": "application/json" });
+            res.end(
+              JSON.stringify({
+                jsonrpc: "2.0",
+                id: message.id,
+                result: {
+                  protocolVersion: "2025-11-25",
+                  capabilities: {},
+                  serverInfo: { name: "mock-exa-mcp", version: "1.0.0" },
+                },
+              })
+            );
+            return;
+          }
+          if (message.method === "tools/call") {
+            const args = message.params?.arguments || {};
+            const urlsStr = JSON.stringify(args);
+            if (urlsStr.includes("thisdomaindoesnotexistatall123456789.com")) {
+              res.writeHead(200, { "content-type": "application/json" });
+              res.end(
+                JSON.stringify({
+                  jsonrpc: "2.0",
+                  id: message.id,
+                  result: {
+                    content: [{ type: "text", text: "Failed to fetch: domain not found" }],
+                    isError: true,
+                  },
+                })
+              );
+              return;
+            }
+            const targetUrl = (Array.isArray(args.urls) ? args.urls[0] : args.url) || "https://example.com";
+            let content = "# Example Domain\n\nThis is example domain content markdown.";
+            if (typeof args.maxCharacters === "number") {
+              content = content.slice(0, args.maxCharacters);
+            }
+            res.writeHead(200, { "content-type": "application/json" });
+            res.end(
+              JSON.stringify({
+                jsonrpc: "2.0",
+                id: message.id,
+                result: {
+                  content: [
+                    {
+                      type: "text",
+                      text: JSON.stringify({
+                        url: targetUrl,
+                        title: "Example Domain",
+                        content,
+                      }),
+                    },
+                  ],
+                },
+              })
+            );
+            return;
+          }
+          res.writeHead(200, { "content-type": "application/json" });
+          res.end(JSON.stringify({ jsonrpc: "2.0", id: message.id, result: {} }));
+        });
+      }
+    });
+
+    await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", () => resolve()));
+    const address = server.address() as any;
+    process.env.EXA_MCP_ENDPOINT = `http://127.0.0.1:${address.port}/mcp`;
   });
 
   afterEach(async () => {
     await closeExaClient();
+    if (server) {
+      await new Promise<void>((resolve) => server.close(() => resolve()));
+    }
     if (prevAgentDir !== undefined) {
       process.env.PI_AGENT_DIR = prevAgentDir;
     } else {
