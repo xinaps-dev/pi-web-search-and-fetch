@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build & Compilation
+dist/
+build/
+out/
+*.tsbuildinfo
+
+# Testing & Coverage
+coverage/
+.vitest/
+*.lcov
+
+# Environment & Secrets
+.env
+.env.local
+.env.*.local
+*.pem
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Pi Agent & Temporary
+.pi/
+tmp/
+temp/
+
+# IDE & Editors
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS Files
+.DS_Store
+Thumbs.db
