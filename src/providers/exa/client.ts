@@ -34,7 +34,7 @@ export const EXA_MCP_ENDPOINT = "https://mcp.exa.ai/mcp";
 export const EXA_API_KEY_QUERY_PARAM = "exaApiKey";
 
 /** Identity reported to the Exa MCP server during `initialize`. */
-const CLIENT_INFO = { name: "pi-web-scout", version: "1.0.0" };
+const CLIENT_INFO = { name: "pi-web-search-and-fetch", version: "1.0.0" };
 
 /** Active singleton client, or `null` when none is connected. */
 let activeClient: Client | null = null;

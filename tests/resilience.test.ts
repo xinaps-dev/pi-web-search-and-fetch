@@ -278,7 +278,7 @@ describe("resilience: provider-level edge cases", () => {
   const prevRetryMax = process.env.EXA_RETRY_MAX_RETRIES;
 
   beforeEach(async () => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-scout-resilience-"));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-search-and-fetch-resilience-"));
     process.env.PI_AGENT_DIR = tmpDir;
     delete process.env.EXA_API_KEY;
     // Keep any (unexpected) retries fast so the suite never stalls.

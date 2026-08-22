@@ -1,12 +1,12 @@
-# pi-web-scout 🌐⚡
+# pi-web-search-and-fetch 🌐⚡
 
-[![npm version](https://img.shields.io/npm/v/pi-web-scout?color=blue&logo=npm)](https://www.npmjs.com/package/pi-web-scout)
+[![npm version](https://img.shields.io/npm/v/pi-web-search-and-fetch?color=blue&logo=npm)](https://www.npmjs.com/package/pi-web-search-and-fetch)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![pi Extension](https://img.shields.io/badge/pi-extension-purple.svg)](https://pi.dev)
 
 > **Empower your [pi](https://pi.dev) coding agent with real-time web intelligence: instant neural search, clean Markdown page extraction, and autonomous deep research.**
 
-`pi-web-scout` transforms your **pi** coding agent into an autonomous web researcher. Say goodbye to outdated training cutoffs and missing documentation — equip your LLM with enterprise-grade web search, high-fidelity webpage retrieval, and multi-query deep synthesis. Built with a modular multi-provider engine, an interactive `/ws` terminal dashboard, and seamless zero-conflict integration with `pi-requesty-provider`.
+`pi-web-search-and-fetch` transforms your **pi** coding agent into an autonomous web researcher. Say goodbye to outdated training cutoffs and missing documentation — equip your LLM with enterprise-grade web search, high-fidelity webpage retrieval, and multi-query deep synthesis. Built with a modular multi-provider engine, an interactive `/ws` terminal dashboard, and seamless zero-conflict integration with `pi-requesty-provider`.
 
 ---
 
@@ -28,21 +28,21 @@
 ### From npm (Recommended)
 
 ```bash
-pi install npm:pi-web-scout
+pi install npm:pi-web-search-and-fetch
 ```
 
 ### From GitHub
 
 ```bash
-pi install git:github.com/xinaps-dev/pi-web-scout
+pi install git:github.com/xinaps-dev/pi-web-search-and-fetch
 ```
 
 ### Local Development
 
 ```bash
 # Clone and build
-git clone https://github.com/xinaps-dev/pi-web-scout.git
-cd pi-web-scout
+git clone https://github.com/xinaps-dev/pi-web-search-and-fetch.git
+cd pi-web-search-and-fetch
 pnpm install
 
 # Run locally in pi
@@ -61,7 +61,7 @@ Run `/ws` inside `pi` to open the interactive TUI Control Panel:
 
 ```text
 ┌───────────────────────────────────────────────────────────┐
-│  🌐 Web Scout - Control Panel                             │
+│  🌐 Web Search and Fetch - Control Panel                             │
 ├───────────────────────────────────────────────────────────┤
 │  [✓] Search (web_search)          : ON  (Provider: exa)   │
 │  [✓] Fetch (web_fetch)           : ON  (Provider: exa)   │
@@ -83,7 +83,7 @@ Run `/ws` inside `pi` to open the interactive TUI Control Panel:
 
 ## 🛠️ Standardized LLM Tools
 
-`pi-web-scout` registers 3 powerful tools with the Pi agent harness:
+`pi-web-search-and-fetch` registers 3 powerful tools with the Pi agent harness:
 
 ### 1. `web_search` *(Enabled by default)*
 Performs real-time web searches and returns structured results with titles, URLs, snippets, publication dates, and citations.
@@ -116,7 +116,7 @@ Agentic multi-query web search for complex questions requiring parallel queries 
 
 ## ⚙️ Configuration & Key Storage
 
-### Extension Configuration: `~/.pi/agent/pi-web-scout.json`
+### Extension Configuration: `~/.pi/agent/pi-web-search-and-fetch.json`
 
 Persistent settings are stored cleanly in your agent directory:
 
@@ -165,7 +165,7 @@ API keys are read and stored using Pi's standard authentication store (`~/.pi/ag
 
 ## 🧩 Provider Architecture
 
-`pi-web-scout` is designed with a fully decoupled capability model:
+`pi-web-search-and-fetch` is designed with a fully decoupled capability model:
 
 ```text
 ┌────────────────────────────────────────────────────────┐
@@ -189,7 +189,7 @@ import type {
   DeepSearchProvider,
   SearchResponse,
   FetchResponse,
-} from "pi-web-scout";
+} from "pi-web-search-and-fetch";
 
 export const myCustomProvider: ProviderModule = {
   id: "custom",
@@ -238,8 +238,8 @@ export const myCustomProvider: ProviderModule = {
 ## 🤝 `pi-requesty-provider` Smart Synergy
 
 When used alongside [`pi-requesty-provider`](https://github.com/xinaps-dev/pi-requesty-provider):
-1. `pi-web-scout` inspects `~/.pi/agent/pi-requesty.json` and evaluates the active session model on `session_start` and `model_select`.
-2. If Requesty has native search enabled (`nativeSearch: true`) in `pi-requesty-provider` and the active model supports server-side search grounding, `pi-web-scout` automatically suppresses `web_search` to prevent duplicate web queries and token waste.
+1. `pi-web-search-and-fetch` inspects `~/.pi/agent/pi-requesty.json` and evaluates the active session model on `session_start` and `model_select`.
+2. If Requesty has native search enabled (`nativeSearch: true`) in `pi-requesty-provider` and the active model supports server-side search grounding, `pi-web-search-and-fetch` automatically suppresses `web_search` to prevent duplicate web queries and token waste.
 3. `web_fetch` remains **fully active**, allowing your agent to extract and inspect complete web pages on demand.
 
 ---

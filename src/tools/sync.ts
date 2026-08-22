@@ -1,11 +1,11 @@
 /**
- * Dynamic synchronization of the active tools of pi-web-scout.
+ * Dynamic synchronization of the active tools of pi-web-search-and-fetch.
  *
  * `syncActiveTools` recomputes which of the extension tools
  * (`web_search`, `web_fetch`, `web_deep_search`) the LLM should see on the
  * next turn and applies that list through `pi.setActiveTools()`:
  *
- * - A tool is active when its section in `~/.pi/agent/pi-web-scout.json`
+ * - A tool is active when its section in `~/.pi/agent/pi-web-search-and-fetch.json`
  *   has `enabled: true` (`search.enabled`, `fetch.enabled`,
  *   `deepSearch.enabled`).
  * - `web_search` is additionally suppressed when the `pi-requesty`
@@ -23,17 +23,17 @@ import { getConfig } from "../config/index.js";
 import { shouldSuppressWebSearch } from "../integrations/requesty.js";
 
 /**
- * Synchronize the active tools of pi-web-scout with the current extension
+ * Synchronize the active tools of pi-web-search-and-fetch with the current extension
  * configuration and the current model.
  *
- * 1. Reads `~/.pi/agent/pi-web-scout.json` (merged over defaults) to
+ * 1. Reads `~/.pi/agent/pi-web-search-and-fetch.json` (merged over defaults) to
  *    evaluate `search.enabled`, `fetch.enabled` and `deepSearch.enabled`.
  * 2. Evaluates the `pi-requesty` suppression rules for `web_search`
  *    against `currentModel`.
- * 3. Merges the computed Scout tools with the tools already active in the
- *    session (non-scout tools such as Pi built-ins and other extensions'
+ * 3. Merges the computed Search and Fetch tools with the tools already active in the
+ *    session (non-search-and-fetch tools such as Pi built-ins and other extensions'
  *    tools are preserved) and calls `pi.setActiveTools()` with the final
- *    list, Scout tools in the stable order `web_search`, `web_fetch`,
+ *    list, Search and Fetch tools in the stable order `web_search`, `web_fetch`,
  *    `web_deep_search`.
  *
  * @param pi Pi extension API receiving `setActiveTools`.
@@ -67,14 +67,14 @@ export async function syncActiveTools(
   }
 
   // Preserve tools that are active in the session but do not belong to
-  // pi-web-scout (Pi built-ins and other extensions' tools); otherwise
+  // pi-web-search-and-fetch (Pi built-ins and other extensions' tools); otherwise
   // `setActiveTools` would deactivate them for the whole agent session.
-  const scoutToolNames = new Set<string>(Object.values(TOOL_IDS));
+  const searchAndFetchToolNames = new Set<string>(Object.values(TOOL_IDS));
   const currentActive =
     typeof pi.getActiveTools === "function" ? pi.getActiveTools() : [];
-  const nonScoutTools = currentActive.filter(
-    (id) => !scoutToolNames.has(id)
+  const nonSearchAndFetchTools = currentActive.filter(
+    (id) => !searchAndFetchToolNames.has(id)
   );
 
-  pi.setActiveTools([...nonScoutTools, ...activeTools]);
+  pi.setActiveTools([...nonSearchAndFetchTools, ...activeTools]);
 }

@@ -1,5 +1,5 @@
 /**
- * Main entry point of the pi-web-scout Pi extension.
+ * Main entry point of the pi-web-search-and-fetch Pi extension.
  *
  * The default export is the Pi extension factory `(pi: ExtensionAPI) => void`
  * that performs the whole initialization and registration of the extension:
@@ -35,7 +35,7 @@ import { syncActiveTools } from "./tools/sync.js";
  * Description of the single `/ws` command shown in Pi's command list.
  */
 export const WS_COMMAND_DESCRIPTION =
-  "Open the Web Scout interactive control panel and provider settings";
+  "Open the Web Search and Fetch interactive control panel and provider settings";
 
 /**
  * Tokenize the raw argument string received by the `/ws` command handler.
@@ -49,12 +49,12 @@ export function splitCommandArgs(args: string): string[] {
 }
 
 /**
- * Pi extension factory of pi-web-scout.
+ * Pi extension factory of pi-web-search-and-fetch.
  *
  * Registers the providers, tools, the single `/ws` command and the
  * lifecycle listeners described in the module header.
  */
-export default function piWebScoutExtension(pi: ExtensionAPI): void {
+export default function piWebSearchAndFetchExtension(pi: ExtensionAPI): void {
   // 1. Provider registry: initially only Exa.
   const registry = new ProviderRegistry();
   registry.registerProvider(exaProviderModule);

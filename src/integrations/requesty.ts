@@ -1,11 +1,11 @@
 /**
  * Detection and synchronization helpers for the `pi-requesty` integration.
  *
- * `pi-web-scout` must coexist with the `pi-requesty` extension: when
+ * `pi-web-search-and-fetch` must coexist with the `pi-requesty` extension: when
  * Requesty has `nativeSearch: true` and the active model is a Requesty
  * model with native web search support (`supportsWebSearch: true`) that is
  * not a Gemini model (Gemini models fail when function calling is combined
- * with native search), `pi-web-scout` must suppress `web_search` to avoid
+ * with native search), `pi-web-search-and-fetch` must suppress `web_search` to avoid
  * duplication and conflicts with the Requesty server. `web_fetch` is always
  * kept active by the caller; this module only decides about `web_search`.
  */
@@ -105,7 +105,7 @@ function asModelInfo(currentModel: unknown): RequestyModelInfo | null {
  * 4. the model has `supportsWebSearch: true`.
  *
  * In every other case `shouldSuppress` is `false` and `web_search` stays
- * active according to the regular `pi-web-scout` configuration.
+ * active according to the regular `pi-web-search-and-fetch` configuration.
  */
 export async function shouldSuppressWebSearch(
   currentModel: unknown

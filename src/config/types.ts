@@ -1,6 +1,6 @@
 /**
  * Strict TypeScript types for the extension config file
- * `~/.pi/agent/pi-web-scout.json`.
+ * `~/.pi/agent/pi-web-search-and-fetch.json`.
  *
  * This module is type-only: it defines the exact JSON structure of the
  * config, one strict sub-type per section, so every other subsystem
@@ -38,7 +38,7 @@ export interface ProvidersConfig {
 }
 
 /**
- * Root structure of `~/.pi/agent/pi-web-scout.json`:
+ * Root structure of `~/.pi/agent/pi-web-search-and-fetch.json`:
  *
  * ```json
  * {
@@ -49,7 +49,7 @@ export interface ProvidersConfig {
  * }
  * ```
  */
-export interface PiWebScoutConfig {
+export interface PiWebSearchAndFetchConfig {
   /** `web_search` tool config. */
   search: WsToolConfig;
   /** `web_fetch` tool config. */

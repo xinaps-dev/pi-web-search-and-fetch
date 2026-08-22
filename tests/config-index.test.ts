@@ -8,14 +8,14 @@ import {
   updateConfig,
 } from "../src/config/index.js";
 import { CONFIG_FILE_NAME, DEFAULT_CONFIG } from "../src/config/constants.js";
-import type { PiWebScoutConfig } from "../src/config/types.js";
+import type { PiWebSearchAndFetchConfig } from "../src/config/types.js";
 
 describe("src/config/index", () => {
   let tmpDir: string;
   const prevAgentDir = process.env.PI_AGENT_DIR;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-scout-config-"));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-search-and-fetch-config-"));
     process.env.PI_AGENT_DIR = tmpDir;
   });
 
@@ -29,7 +29,7 @@ describe("src/config/index", () => {
   });
 
   describe("getConfigPath", () => {
-    it("returns the path to pi-web-scout.json inside the agent directory", () => {
+    it("returns the path to pi-web-search-and-fetch.json inside the agent directory", () => {
       expect(getConfigPath()).toBe(
         path.join(process.env.PI_AGENT_DIR as string, CONFIG_FILE_NAME)
       );
@@ -86,7 +86,7 @@ describe("src/config/index", () => {
 
     it("merges a full on-disk config", async () => {
       fs.mkdirSync(process.env.PI_AGENT_DIR as string, { recursive: true });
-      const full: PiWebScoutConfig = {
+      const full: PiWebSearchAndFetchConfig = {
         search: { enabled: false, provider: "brave" },
         fetch: { enabled: true, provider: "jina" },
         deepSearch: { enabled: true, provider: "exa" },
@@ -126,7 +126,7 @@ describe("src/config/index", () => {
       // Verify the file was written.
       const raw = JSON.parse(
         fs.readFileSync(getConfigPath(), "utf8")
-      ) as PiWebScoutConfig;
+      ) as PiWebSearchAndFetchConfig;
       expect(raw).toEqual(result);
     });
 
@@ -142,7 +142,7 @@ describe("src/config/index", () => {
     it("merges over an existing on-disk config", async () => {
       // Seed an existing config.
       fs.mkdirSync(process.env.PI_AGENT_DIR as string, { recursive: true });
-      const existing: PiWebScoutConfig = {
+      const existing: PiWebSearchAndFetchConfig = {
         search: { enabled: true, provider: "exa" },
         fetch: { enabled: true, provider: "exa" },
         deepSearch: { enabled: true, provider: "exa" },

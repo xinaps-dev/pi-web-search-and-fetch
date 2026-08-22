@@ -34,11 +34,11 @@ describe("package.json metadata and pi configuration", () => {
     expect(pkg.keywords).toContain("pi");
     expect(pkg.keywords).toContain("pi-coding-agent");
     expect(pkg.keywords).toContain("web-search");
-    expect(pkg.keywords).toContain("web-scout");
+    expect(pkg.keywords).toContain("web-search-and-fetch");
   });
 
   it("contains essential metadata for npm publishing", () => {
-    expect(pkg.name).toBe("pi-web-scout");
+    expect(pkg.name).toBe("pi-web-search-and-fetch");
     expect(pkg.version).toMatch(/^\d+\.\d+\.\d+/);
     expect(typeof pkg.description).toBe("string");
     expect(pkg.description.length).toBeGreaterThan(0);

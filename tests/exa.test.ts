@@ -363,7 +363,7 @@ describe("src/providers/exa (tests/exa.test.ts)", () => {
   const prevDeepTimeout = process.env.EXA_DEEP_SEARCH_TIMEOUT_MS;
 
   beforeEach(async () => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-scout-exa-test-"));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-search-and-fetch-exa-test-"));
     process.env.PI_AGENT_DIR = tmpDir;
     delete process.env.EXA_API_KEY;
     delete process.env.EXA_SEARCH_TIMEOUT_MS;

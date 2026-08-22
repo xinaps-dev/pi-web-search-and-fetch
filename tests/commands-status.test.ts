@@ -6,7 +6,7 @@ import type { ExtensionCommandContext } from "@earendil-works/pi-coding-agent";
 import { writeExaApiKey } from "../src/config/auth.js";
 import { getConfigPath } from "../src/config/index.js";
 import type {
-  PiWebScoutConfig,
+  PiWebSearchAndFetchConfig,
   WsToolConfig,
 } from "../src/config/types.js";
 import { buildWsStatusReport, handleWsStatus } from "../src/commands/status.js";
@@ -24,8 +24,8 @@ function mockCtx(currentModel?: unknown) {
   return { ctx, notify };
 }
 
-/** Write a full `pi-web-scout.json` into the temp agent directory. */
-function writeConfig(config: PiWebScoutConfig): void {
+/** Write a full `pi-web-search-and-fetch.json` into the temp agent directory. */
+function writeConfig(config: PiWebSearchAndFetchConfig): void {
   fs.mkdirSync(process.env.PI_AGENT_DIR as string, { recursive: true });
   fs.writeFileSync(getConfigPath(), JSON.stringify(config), "utf8");
 }
@@ -44,7 +44,7 @@ function baseConfig(
   fetch?: Partial<WsToolConfig>,
   deepSearch?: Partial<WsToolConfig>,
   useApiKey = true
-): PiWebScoutConfig {
+): PiWebSearchAndFetchConfig {
   return {
     search: { enabled: true, provider: "exa", ...search },
     fetch: { enabled: true, provider: "exa", ...fetch },
@@ -59,7 +59,7 @@ describe("src/commands/status", () => {
   const prevExaApiKey = process.env.EXA_API_KEY;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-scout-status-"));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-search-and-fetch-status-"));
     process.env.PI_AGENT_DIR = tmpDir;
     delete process.env.EXA_API_KEY;
   });
@@ -81,7 +81,7 @@ describe("src/commands/status", () => {
   describe("buildWsStatusReport: tools section", () => {
     it("shows default tool states and providers (no config file)", async () => {
       const report = await buildWsStatusReport();
-      expect(report).toContain("🌐 Web Scout — Current Status");
+      expect(report).toContain("🌐 Web Search and Fetch — Current Status");
       expect(report).toContain("Tools:");
       expect(report).toContain(
         "[✓] Search (web_search) : ON (Provider: exa)"
@@ -213,7 +213,7 @@ describe("src/commands/status", () => {
       expect(notify).toHaveBeenCalledTimes(1);
       const [message, type] = notify.mock.calls[0] as [string, "info"];
       expect(type).toBe("info");
-      expect(message).toContain("🌐 Web Scout — Current Status");
+      expect(message).toContain("🌐 Web Search and Fetch — Current Status");
       expect(message).toContain("Tools:");
       expect(message).toContain("Credentials:");
       expect(message).toContain("pi-requesty:");

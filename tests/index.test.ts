@@ -10,7 +10,7 @@ import { closeExaClient } from "../src/providers/exa/client.js";
 import {
   WS_COMMAND_DESCRIPTION,
   splitCommandArgs,
-  default as piWebScoutExtension,
+  default as piWebSearchAndFetchExtension,
 } from "../src/index.js";
 
 vi.mock("../src/providers/exa/client.js", async (importOriginal) => {
@@ -76,7 +76,7 @@ describe("src/index", () => {
   const prevAgentDir = process.env.PI_AGENT_DIR;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-scout-index-"));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-search-and-fetch-index-"));
     process.env.PI_AGENT_DIR = tmpDir;
     vi.mocked(closeExaClient).mockClear();
   });
@@ -105,10 +105,10 @@ describe("src/index", () => {
     });
   });
 
-  describe("piWebScoutExtension factory", () => {
-    it("registers the three Scout tools", () => {
+  describe("piWebSearchAndFetchExtension factory", () => {
+    it("registers the three Search and Fetch tools", () => {
       const { pi, registerTool } = mockPi();
-      piWebScoutExtension(pi);
+      piWebSearchAndFetchExtension(pi);
       expect(registerTool).toHaveBeenCalledTimes(3);
       const names = registerTool.mock.calls.map((call) => call[0].name);
       expect(names).toEqual(["web_search", "web_fetch", "web_deep_search"]);
@@ -116,7 +116,7 @@ describe("src/index", () => {
 
     it("never registers more than the 3 consolidated standard tools", () => {
       const { pi, registerTool } = mockPi();
-      piWebScoutExtension(pi);
+      piWebSearchAndFetchExtension(pi);
       const standardTools = new Set([
         "web_search",
         "web_fetch",
@@ -131,7 +131,7 @@ describe("src/index", () => {
 
     it("registers the single /ws command with description", () => {
       const { pi, registerCommand } = mockPi();
-      piWebScoutExtension(pi);
+      piWebSearchAndFetchExtension(pi);
       expect(registerCommand).toHaveBeenCalledTimes(1);
       const [name, options] = registerCommand.mock.calls[0];
       expect(name).toBe("ws");
@@ -141,7 +141,7 @@ describe("src/index", () => {
 
     it("registers the four lifecycle listeners", () => {
       const { pi, on } = mockPi();
-      piWebScoutExtension(pi);
+      piWebSearchAndFetchExtension(pi);
       const events = on.mock.calls.map((call) => call[0]);
       expect(events).toEqual([
         "session_start",
@@ -153,7 +153,7 @@ describe("src/index", () => {
 
     it("session_start: syncs tools", async () => {
       const { pi, on, setActiveTools } = mockPi();
-      piWebScoutExtension(pi);
+      piWebSearchAndFetchExtension(pi);
       const { ctx, setStatus } = mockCtx();
       const handler = handlerFor(on, "session_start");
       expect(handler).toBeDefined();
@@ -165,7 +165,7 @@ describe("src/index", () => {
     it("model_select: re-evaluates pi-requesty compatibility and syncs tools", async () => {
       writeRequestyConfig({ nativeSearch: true });
       const { pi, on, setActiveTools } = mockPi();
-      piWebScoutExtension(pi);
+      piWebSearchAndFetchExtension(pi);
       const { ctx, setStatus } = mockCtx();
       const handler = handlerFor(on, "model_select");
       expect(handler).toBeDefined();
@@ -189,7 +189,7 @@ describe("src/index", () => {
 
     it("before_agent_start: ensures active tools match model and config", async () => {
       const { pi, on, setActiveTools } = mockPi();
-      piWebScoutExtension(pi);
+      piWebSearchAndFetchExtension(pi);
       const { ctx } = mockCtx({
         provider: "requesty",
         id: "gpt-4o",
@@ -207,7 +207,7 @@ describe("src/index", () => {
 
     it("session_start, model_select and before_agent_start all trigger tool sync", async () => {
       const { pi, on, setActiveTools } = mockPi();
-      piWebScoutExtension(pi);
+      piWebSearchAndFetchExtension(pi);
       const { ctx } = mockCtx();
       const sessionStart = handlerFor(on, "session_start");
       const modelSelect = handlerFor(on, "model_select");
@@ -231,7 +231,7 @@ describe("src/index", () => {
 
     it("session_shutdown: invokes closeExaClient", async () => {
       const { pi, on } = mockPi();
-      piWebScoutExtension(pi);
+      piWebSearchAndFetchExtension(pi);
       const handler = handlerFor(on, "session_shutdown");
       expect(handler).toBeDefined();
       const { ctx } = mockCtx();

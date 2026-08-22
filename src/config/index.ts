@@ -1,10 +1,10 @@
 /**
- * Config read/persist functions for pi-web-scout.
+ * Config read/persist functions for pi-web-search-and-fetch.
  *
- * The extension config lives at `~/.pi/agent/pi-web-scout.json`.
+ * The extension config lives at `~/.pi/agent/pi-web-search-and-fetch.json`.
  * `getConfig()` reads the on-disk config and merges it over the
  * built-in defaults so partial or missing files always yield a
- * complete `PiWebScoutConfig`.
+ * complete `PiWebSearchAndFetchConfig`.
  * `updateConfig()` performs an atomic write (write-to-temp + rename)
  * so a crash never leaves a truncated config file.
  */
@@ -13,11 +13,11 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { getAgentDir } from "./auth.js";
 import { CONFIG_FILE_NAME, DEFAULT_CONFIG } from "./constants.js";
-import type { PiWebScoutConfig } from "./types.js";
+import type { PiWebSearchAndFetchConfig } from "./types.js";
 
 /**
  * Full path of the extension config file
- * (`~/.pi/agent/pi-web-scout.json`), overridable via `PI_AGENT_DIR`
+ * (`~/.pi/agent/pi-web-search-and-fetch.json`), overridable via `PI_AGENT_DIR`
  * for tests.
  */
 export function getConfigPath(): string {
@@ -30,10 +30,10 @@ export function getConfigPath(): string {
  * `DEFAULT_CONFIG` without mutating either input.
  */
 function mergeConfig(
-  base: PiWebScoutConfig,
-  partial: Partial<PiWebScoutConfig>
-): PiWebScoutConfig {
-  const result: PiWebScoutConfig = {
+  base: PiWebSearchAndFetchConfig,
+  partial: Partial<PiWebSearchAndFetchConfig>
+): PiWebSearchAndFetchConfig {
+  const result: PiWebSearchAndFetchConfig = {
     search: { ...base.search, ...(partial.search ?? {}) },
     fetch: { ...base.fetch, ...(partial.fetch ?? {}) },
     deepSearch: { ...base.deepSearch, ...(partial.deepSearch ?? {}) },
@@ -45,17 +45,17 @@ function mergeConfig(
 }
 
 /**
- * Read `~/.pi/agent/pi-web-scout.json` and merge it over the built-in
- * defaults. Returns a complete `PiWebScoutConfig` even
+ * Read `~/.pi/agent/pi-web-search-and-fetch.json` and merge it over the built-in
+ * defaults. Returns a complete `PiWebSearchAndFetchConfig` even
  * when the file is missing, empty or partially populated.
  */
-export async function getConfig(): Promise<PiWebScoutConfig> {
+export async function getConfig(): Promise<PiWebSearchAndFetchConfig> {
   let raw: string;
   try {
     raw = fs.readFileSync(getConfigPath(), "utf8");
   } catch {
     // File missing or unreadable → pure defaults.
-    return structuredClone(DEFAULT_CONFIG) as PiWebScoutConfig;
+    return structuredClone(DEFAULT_CONFIG) as PiWebSearchAndFetchConfig;
   }
 
   let parsed: unknown;
@@ -63,16 +63,16 @@ export async function getConfig(): Promise<PiWebScoutConfig> {
     parsed = JSON.parse(raw);
   } catch {
     // Malformed JSON → pure defaults.
-    return structuredClone(DEFAULT_CONFIG) as PiWebScoutConfig;
+    return structuredClone(DEFAULT_CONFIG) as PiWebSearchAndFetchConfig;
   }
 
   if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
-    return structuredClone(DEFAULT_CONFIG) as PiWebScoutConfig;
+    return structuredClone(DEFAULT_CONFIG) as PiWebSearchAndFetchConfig;
   }
 
   return mergeConfig(
-    structuredClone(DEFAULT_CONFIG) as PiWebScoutConfig,
-    parsed as Partial<PiWebScoutConfig>
+    structuredClone(DEFAULT_CONFIG) as PiWebSearchAndFetchConfig,
+    parsed as Partial<PiWebSearchAndFetchConfig>
   );
 }
 
@@ -86,8 +86,8 @@ export async function getConfig(): Promise<PiWebScoutConfig> {
  * providing the full config.
  */
 export async function updateConfig(
-  partial: Partial<PiWebScoutConfig>
-): Promise<PiWebScoutConfig> {
+  partial: Partial<PiWebSearchAndFetchConfig>
+): Promise<PiWebSearchAndFetchConfig> {
   const current = await getConfig();
   const merged = mergeConfig(current, partial);
 

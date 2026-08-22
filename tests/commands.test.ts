@@ -16,7 +16,7 @@ import {
   getConfigPath,
 } from "../src/config/index.js";
 import type {
-  PiWebScoutConfig,
+  PiWebSearchAndFetchConfig,
 } from "../src/config/types.js";
 import {
   launchProviderConfigModal,
@@ -148,8 +148,8 @@ function createMockCtx(currentModel?: unknown): MockCommandCtx {
   return { ctx, notify, custom, select };
 }
 
-/** Write helper for `pi-web-scout.json`. */
-function writeConfigFile(config: PiWebScoutConfig): void {
+/** Write helper for `pi-web-search-and-fetch.json`. */
+function writeConfigFile(config: PiWebSearchAndFetchConfig): void {
   fs.mkdirSync(process.env.PI_AGENT_DIR as string, { recursive: true });
   fs.writeFileSync(getConfigPath(), JSON.stringify(config, null, 2), "utf8");
 }
@@ -171,7 +171,7 @@ describe("tests/commands.test.ts - /ws command & Hub execution", () => {
   const prevExaKey = process.env.EXA_API_KEY;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-scout-commands-test-"));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-search-and-fetch-commands-test-"));
     process.env.PI_AGENT_DIR = tmpDir;
     delete process.env.EXA_API_KEY;
     registry = makeTestRegistry();
@@ -227,7 +227,7 @@ describe("tests/commands.test.ts - /ws command & Hub execution", () => {
       const message = notify.mock.calls[0][0];
       expect(notify.mock.calls[0][1]).toBe("info");
 
-      expect(message).toContain("Web Scout — Current Status");
+      expect(message).toContain("Web Search and Fetch — Current Status");
       expect(message).toContain("[✓] Search (web_search) : ON (Provider: exa)");
       expect(message).toContain("[✓] Fetch (web_fetch) : ON (Provider: exa)");
       expect(message).toContain("[ ] Deep Search (web_deep_search) : OFF (Provider: exa)");

@@ -1,5 +1,5 @@
 /**
- * Standard provider interfaces and contracts for the pi-web-scout
+ * Standard provider interfaces and contracts for the pi-web-search-and-fetch
  * multi-provider architecture.
  *
  * Each provider module can implement one, several or all three capabilities:
