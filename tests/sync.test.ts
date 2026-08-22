@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { getConfigPath } from "../src/config/index.js";
 import type {
-  PiWebScoutConfig,
+  PiWebSearchAndFetchConfig,
   WsToolConfig,
 } from "../src/config/types.js";
 import { syncActiveTools } from "../src/tools/sync.js";
@@ -21,8 +21,8 @@ function mockPi(initialActiveTools: string[] = []) {
   return { pi, setActiveTools, getActiveTools };
 }
 
-/** Write a full `pi-web-scout.json` into the temp agent directory. */
-function writeConfig(config: PiWebScoutConfig): void {
+/** Write a full `pi-web-search-and-fetch.json` into the temp agent directory. */
+function writeConfig(config: PiWebSearchAndFetchConfig): void {
   fs.mkdirSync(process.env.PI_AGENT_DIR as string, { recursive: true });
   fs.writeFileSync(getConfigPath(), JSON.stringify(config), "utf8");
 }
@@ -40,7 +40,7 @@ function baseConfig(
   search?: Partial<WsToolConfig>,
   fetch?: Partial<WsToolConfig>,
   deepSearch?: Partial<WsToolConfig>
-): PiWebScoutConfig {
+): PiWebSearchAndFetchConfig {
   return {
     search: { enabled: true, provider: "exa", ...search },
     fetch: { enabled: true, provider: "exa", ...fetch },
@@ -54,7 +54,7 @@ describe("src/tools/sync", () => {
   const prevAgentDir = process.env.PI_AGENT_DIR;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-scout-sync-"));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-search-and-fetch-sync-"));
     process.env.PI_AGENT_DIR = tmpDir;
   });
 
@@ -186,7 +186,7 @@ describe("src/tools/sync", () => {
   });
 
   describe("consolidated standard tools bound", () => {
-    it("never activates tools outside the 3 consolidated standard Scout tools", async () => {
+    it("never activates tools outside the 3 consolidated standard Search and Fetch tools", async () => {
       writeConfig(baseConfig(undefined, undefined, { enabled: true }));
       const { pi, setActiveTools } = mockPi(["read", "bash"]);
       await syncActiveTools(pi);
@@ -204,8 +204,8 @@ describe("src/tools/sync", () => {
     });
   });
 
-  describe("preserving non-scout tools from the session", () => {
-    it("preserves non-scout tools when enabling Scout tools", async () => {
+  describe("preserving non-search-and-fetch tools from the session", () => {
+    it("preserves non-search-and-fetch tools when enabling Search and Fetch tools", async () => {
       const { pi, setActiveTools } = mockPi(["read", "bash"]);
       await syncActiveTools(pi);
       expect(setActiveTools).toHaveBeenCalledWith([
@@ -216,7 +216,7 @@ describe("src/tools/sync", () => {
       ]);
     });
 
-    it("preserves non-scout tools when every Scout tool is disabled", async () => {
+    it("preserves non-search-and-fetch tools when every Search and Fetch tool is disabled", async () => {
       writeConfig(
         baseConfig({ enabled: false }, { enabled: false }, { enabled: false })
       );
@@ -225,7 +225,7 @@ describe("src/tools/sync", () => {
       expect(setActiveTools).toHaveBeenCalledWith(["read", "bash", "edit"]);
     });
 
-    it("preserves non-scout tools and drops Scout tools on suppression", async () => {
+    it("preserves non-search-and-fetch tools and drops Search and Fetch tools on suppression", async () => {
       writeRequestyConfig({ nativeSearch: true });
       const { pi, setActiveTools } = mockPi([
         "read",
@@ -245,7 +245,7 @@ describe("src/tools/sync", () => {
       ]);
     });
 
-    it("does not duplicate Scout tools already active in the session", async () => {
+    it("does not duplicate Search and Fetch tools already active in the session", async () => {
       const { pi, setActiveTools } = mockPi(["web_search", "web_fetch"]);
       await syncActiveTools(pi);
       expect(setActiveTools).toHaveBeenCalledWith(["web_search", "web_fetch"]);

@@ -11,7 +11,7 @@ describe("README.md documentation", () => {
 
   it("documents installation and package setup", () => {
     const content = readFileSync(readmePath, "utf-8");
-    expect(content).toMatch(/# pi-web-scout/i);
+    expect(content).toMatch(/# pi-web-search-and-fetch/i);
     expect(content).toMatch(/## .*Installation/i);
     expect(content).toMatch(/pi install/i);
   });
@@ -24,7 +24,7 @@ describe("README.md documentation", () => {
 
   it("documents configuration and credential storage", () => {
     const content = readFileSync(readmePath, "utf-8");
-    expect(content).toMatch(/pi-web-scout\.json/);
+    expect(content).toMatch(/pi-web-search-and-fetch\.json/);
     expect(content).toMatch(/auth\.json/);
     expect(content).toMatch(/EXA_API_KEY/);
   });

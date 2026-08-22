@@ -1,5 +1,5 @@
 /**
- * Credential management for pi-web-scout.
+ * Credential management for pi-web-search-and-fetch.
  *
  * API keys are stored in the standard Pi credential store
  * `~/.pi/agent/auth.json` under the provider key (e.g. `"exa"`) with the
@@ -24,14 +24,14 @@ export const EXA_PROVIDER_KEY = "exa";
 
 /** Standard credential entry stored in `auth.json`. */
 export interface StoredCredential {
-  /** Credential kind; API keys are the only kind used by pi-web-scout. */
+  /** Credential kind; API keys are the only kind used by pi-web-search-and-fetch. */
   type: "api_key";
   /** The secret key value. */
   key: string;
 }
 
 /**
- * Agent directory holding `pi-web-scout.json` and `auth.json`
+ * Agent directory holding `pi-web-search-and-fetch.json` and `auth.json`
  * (`~/.pi/agent`). Overridable via `PI_AGENT_DIR` for tests.
  */
 export function getAgentDir(): string {

@@ -20,7 +20,7 @@ import type {
   SearchResponse,
 } from "../src/providers/types.js";
 import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
-import type { PiWebScoutConfig } from "../src/config/types.js";
+import type { PiWebSearchAndFetchConfig } from "../src/config/types.js";
 import {
   SECURITY_NOTICE_PREFIX,
   wrapWebContent,
@@ -51,7 +51,7 @@ function sampleResponse(provider = "exa"): SearchResponse {
 }
 
 /** Full config shape with the `search` section pointing at `providerId`. */
-function mockConfig(providerId = "exa"): PiWebScoutConfig {
+function mockConfig(providerId = "exa"): PiWebSearchAndFetchConfig {
   return {
     search: { enabled: true, provider: providerId },
     fetch: { enabled: true, provider: providerId },
@@ -369,7 +369,7 @@ describe("src/tools/web-search", () => {
       // Point PI_AGENT_DIR at an empty temp dir so the real config reader
       // falls back to the built-in defaults (search.provider = "exa").
       const prevAgentDir = process.env.PI_AGENT_DIR;
-      const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-scout-test-"));
+      const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-search-and-fetch-test-"));
       process.env.PI_AGENT_DIR = tmpDir;
       try {
         const { searchMock, registry } = createMockSearchProvider();

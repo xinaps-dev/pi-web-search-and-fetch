@@ -27,7 +27,7 @@ import type {
   ExtensionCommandContext,
 } from "@earendil-works/pi-coding-agent";
 import { getConfig } from "../config/index.js";
-import type { PiWebScoutConfig } from "../config/types.js";
+import type { PiWebSearchAndFetchConfig } from "../config/types.js";
 import type { ProviderRegistry } from "../providers/registry.js";
 import { shouldSuppressWebSearch } from "../integrations/requesty.js";
 import {

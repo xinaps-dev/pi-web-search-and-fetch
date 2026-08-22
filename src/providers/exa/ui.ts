@@ -4,7 +4,7 @@
  * Built on the shared TUI form utilities (`src/ui/forms.ts`). The modal
  * shows:
  * - a `[ Use API Key: Yes / No ]` toggle initialized from
- *   `pi-web-scout.json` (`providers.exa.useApiKey`);
+ *   `pi-web-search-and-fetch.json` (`providers.exa.useApiKey`);
  * - a masked "Exa API Key" text field initialized with the key currently
  *   stored in `~/.pi/agent/auth.json`;
  * - explanatory text about public free mode (global limits) vs private
@@ -12,7 +12,7 @@
  *
  * On save the modal persists securely:
  * - `updateConfig({ providers: { exa: { useApiKey } } })` persists the
- *   toggle in `pi-web-scout.json` (atomic write);
+ *   toggle in `pi-web-search-and-fetch.json` (atomic write);
  * - with the toggle on and a non-empty key, `writeExaApiKey(key)` stores
  *   the key in `auth.json` with `0o600` permissions;
  * - with the toggle on and an empty key, the previously stored key is
@@ -72,7 +72,7 @@ export const EXA_MODAL_INFO: string[] = [
 
 /**
  * Persist the Exa configuration securely:
- * updates `providers.exa.useApiKey` in `pi-web-scout.json` and writes or
+ * updates `providers.exa.useApiKey` in `pi-web-search-and-fetch.json` and writes or
  * removes the Exa credential in `auth.json` accordingly.
  */
 export async function persistExaConfig(values: ExaModalValues): Promise<void> {
@@ -94,7 +94,7 @@ export async function persistExaConfig(values: ExaModalValues): Promise<void> {
  * Build the interactive Exa configuration modal as a `FormComponent`.
  *
  * Loads the current state before rendering:
- * - `useApiKey` from `pi-web-scout.json` (default when missing);
+ * - `useApiKey` from `pi-web-search-and-fetch.json` (default when missing);
  * - `apiKey` from the stored `auth.json` credential (empty when none).
  *
  * The component is a pi-tui `Component`/`Focusable` and can be returned

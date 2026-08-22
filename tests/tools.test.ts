@@ -3,7 +3,7 @@ import * as os from "node:os";
 import * as path from "node:path";
 import { describe, expect, it, vi } from "vitest";
 import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
-import type { PiWebScoutConfig } from "../src/config/types.js";
+import type { PiWebSearchAndFetchConfig } from "../src/config/types.js";
 import { TOOL_IDS } from "../src/config/constants.js";
 import { ProviderRegistry } from "../src/providers/registry.js";
 import type {
@@ -141,7 +141,7 @@ function sampleDeepSearchResponse(provider = "exa"): DeepSearchResponse {
 }
 
 /** Generates standard test configuration. */
-function createMockConfig(overrides?: Partial<PiWebScoutConfig>): PiWebScoutConfig {
+function createMockConfig(overrides?: Partial<PiWebSearchAndFetchConfig>): PiWebSearchAndFetchConfig {
   return {
     search: { enabled: true, provider: "exa" },
     fetch: { enabled: true, provider: "exa" },
@@ -1344,7 +1344,7 @@ describe("src/tools (tests/tools.test.ts)", () => {
       registry.registerProvider(fetchMod);
       registry.registerProvider(deepMod);
 
-      const customConfig: PiWebScoutConfig = {
+      const customConfig: PiWebSearchAndFetchConfig = {
         search: { enabled: true, provider: "search-only-provider" },
         fetch: { enabled: true, provider: "fetch-only-provider" },
         deepSearch: { enabled: true, provider: "deep-only-provider" },
@@ -1386,7 +1386,7 @@ describe("src/tools (tests/tools.test.ts)", () => {
 
     it("uses default getConfig reading from disk/defaults when getConfig option is omitted", async () => {
       const prevAgentDir = process.env.PI_AGENT_DIR;
-      const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-scout-tools-test-"));
+      const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-search-and-fetch-tools-test-"));
       process.env.PI_AGENT_DIR = tmpDir;
 
       try {

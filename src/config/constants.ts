@@ -1,5 +1,5 @@
 /**
- * Global constants of pi-web-scout: config file name, default configuration
+ * Global constants of pi-web-search-and-fetch: config file name, default configuration
  * values and the tool identifiers exposed to the LLM.
  *
  * This module is value-level and must stay free of imports from other
@@ -9,8 +9,8 @@
 
 import type { WsToolId } from "../types.js";
 
-/** File name of the extension config: `~/.pi/agent/pi-web-scout.json`. */
-export const CONFIG_FILE_NAME = "pi-web-scout.json";
+/** File name of the extension config: `~/.pi/agent/pi-web-search-and-fetch.json`. */
+export const CONFIG_FILE_NAME = "pi-web-search-and-fetch.json";
 
 /**
  * Default configuration values merged over the on-disk config:

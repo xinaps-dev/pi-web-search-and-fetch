@@ -18,7 +18,7 @@ import type {
   ToolDefinition,
 } from "@earendil-works/pi-coding-agent";
 import { getConfig } from "../config/index.js";
-import type { PiWebScoutConfig } from "../config/types.js";
+import type { PiWebSearchAndFetchConfig } from "../config/types.js";
 import { TOOL_IDS } from "../config/constants.js";
 import type { ProviderRegistry } from "../providers/registry.js";
 import type { SearchResponse } from "../providers/types.js";
@@ -170,7 +170,7 @@ export function formatSearchResults(response: SearchResponse): string {
 /** Options for {@link createWebSearchTool}. */
 export interface WebSearchToolOptions {
   /** Config reader; defaults to the real `getConfig`. */
-  getConfig?: () => Promise<PiWebScoutConfig>;
+  getConfig?: () => Promise<PiWebSearchAndFetchConfig>;
 }
 
 /**
