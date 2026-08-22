@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import * as fs from "node:fs";
 import * as path from "node:path";
+import { CLIENT_INFO } from "../src/providers/exa/client.js";
 
 describe("package.json metadata and pi configuration", () => {
   const packageJsonPath = path.resolve(__dirname, "../package.json");
@@ -59,5 +60,13 @@ describe("package.json metadata and pi configuration", () => {
     expect(pkg.scripts.typecheck).toBe("tsc --noEmit");
     expect(pkg.scripts.test).toBe("vitest run");
     expect(pkg.scripts.prepublishOnly).toBeDefined();
+  });
+
+  it("keeps the MCP client identity version in sync with the package version", () => {
+    expect(CLIENT_INFO.name).toBe(pkg.name);
+    // The identity reported during the MCP `initialize` handshake must
+    // match the published package version.
+    expect(CLIENT_INFO.version).toMatch(/^\d+\.\d+\.\d+/);
+    expect(CLIENT_INFO.version).toBe(pkg.version);
   });
 });
