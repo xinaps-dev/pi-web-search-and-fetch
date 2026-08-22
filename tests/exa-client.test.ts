@@ -148,7 +148,7 @@ describe("src/providers/exa/client", () => {
   const prevMcpEndpoint = process.env.EXA_MCP_ENDPOINT;
 
   beforeEach(async () => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-scout-exa-client-"));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-search-and-fetch-exa-client-"));
     process.env.PI_AGENT_DIR = tmpDir;
     delete process.env.EXA_API_KEY;
     await closeExaClient();
@@ -423,7 +423,7 @@ describe("getExaClient connection error masking", () => {
   const prevExaKey = process.env.EXA_API_KEY;
 
   beforeEach(async () => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-scout-exa-mask-"));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-search-and-fetch-exa-mask-"));
     process.env.PI_AGENT_DIR = tmpDir;
     delete process.env.EXA_API_KEY;
     await closeExaClient();
@@ -509,7 +509,7 @@ describe("getExaClient retry recovery on transient failure", () => {
   const prevAgentDir = process.env.PI_AGENT_DIR;
 
   beforeEach(async () => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-scout-exa-retry-"));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-search-and-fetch-exa-retry-"));
     process.env.PI_AGENT_DIR = tmpDir;
     await closeExaClient();
     attempts = 0;

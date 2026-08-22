@@ -1,5 +1,5 @@
 /**
- * Root entry point of the pi-web-scout Pi extension.
+ * Root entry point of the pi-web-search-and-fetch Pi extension.
  *
  * Pi loads the extension through the `"pi".extensions` entry in
  * `package.json` (`./index.ts`), which resolves to this file. It re-exports

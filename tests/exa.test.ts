@@ -363,7 +363,7 @@ describe("src/providers/exa (tests/exa.test.ts)", () => {
   const prevDeepTimeout = process.env.EXA_DEEP_SEARCH_TIMEOUT_MS;
 
   beforeEach(async () => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-scout-exa-test-"));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-search-and-fetch-exa-test-"));
     process.env.PI_AGENT_DIR = tmpDir;
     delete process.env.EXA_API_KEY;
     delete process.env.EXA_SEARCH_TIMEOUT_MS;
@@ -611,9 +611,9 @@ describe("src/providers/exa (tests/exa.test.ts)", () => {
       });
 
       expect(mockServer.toolCalls).toHaveLength(1);
-      expect(mockServer.toolCalls[0].name).toBe(EXA_SEARCH_TOOL);
+      expect(mockServer.toolCalls[0].name).toBe(EXA_FIND_SIMILAR_TOOL);
       expect(mockServer.toolCalls[0].arguments).toEqual({
-        query: "https://example.com/reference",
+        url: "https://example.com/reference",
         numResults: EXA_SEARCH_DEFAULT_NUM_RESULTS,
       });
       expect(response.query).toBe("https://example.com/reference");

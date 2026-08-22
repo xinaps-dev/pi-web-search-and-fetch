@@ -129,7 +129,7 @@ export async function buildWsStatusReport(
       }`;
 
   return [
-    "🌐 Web Scout — Current Status",
+    "🌐 Web Search and Fetch — Current Status",
     "",
     "Tools:",
     ...toolLines,

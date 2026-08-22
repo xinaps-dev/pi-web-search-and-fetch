@@ -1,6 +1,6 @@
 /**
  * Global common types, states and enumerations shared by every
- * pi-web-scout subsystem (config, providers, tools, commands, UI and
+ * pi-web-search-and-fetch subsystem (config, providers, tools, commands, UI and
  * integrations).
  *
  * This module is intentionally type-only and independent of any provider,

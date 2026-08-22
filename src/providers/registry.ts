@@ -1,5 +1,5 @@
 /**
- * Central provider registry for the pi-web-scout multi-provider
+ * Central provider registry for the pi-web-search-and-fetch multi-provider
  * architecture.
  *
  * The registry holds the registered `ProviderModule`s in memory and

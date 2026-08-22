@@ -1,12 +1,12 @@
-# pi-web-scout 🌐⚡
+# pi-web-search-and-fetch 🌐⚡
 
-[![npm version](https://img.shields.io/npm/v/pi-web-scout?color=blue&logo=npm)](https://www.npmjs.com/package/pi-web-scout)
+[![npm version](https://img.shields.io/npm/v/pi-web-search-and-fetch?color=blue&logo=npm)](https://www.npmjs.com/package/pi-web-search-and-fetch)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![pi Extension](https://img.shields.io/badge/pi-extension-purple.svg)](https://pi.dev)
 
 > **Empower your [pi](https://pi.dev) coding agent with real-time web intelligence: instant neural search, clean Markdown page extraction, and autonomous deep research.**
 
-`pi-web-scout` transforms your **pi** coding agent into an autonomous web researcher. Say goodbye to outdated training cutoffs and missing documentation — equip your LLM with enterprise-grade web search, high-fidelity webpage retrieval, and multi-query deep synthesis. Built with a modular multi-provider engine, an interactive `/ws` terminal dashboard, and seamless zero-conflict integration with `pi-requesty-provider`.
+`pi-web-search-and-fetch` transforms your **pi** coding agent into an autonomous web researcher. Say goodbye to outdated training cutoffs and missing documentation — equip your LLM with enterprise-grade web search, high-fidelity webpage retrieval, and multi-query deep synthesis. Built with a modular multi-provider engine, an interactive `/ws` terminal dashboard, and seamless zero-conflict integration with `pi-requesty-provider`.
 
 ---
 
@@ -28,21 +28,21 @@
 ### From npm (Recommended)
 
 ```bash
-pi install npm:pi-web-scout
+pi install npm:pi-web-search-and-fetch
 ```
 
 ### From GitHub
 
 ```bash
-pi install git:github.com/xinaps-dev/pi-web-scout
+pi install git:github.com/xinaps-dev/pi-web-search-and-fetch
 ```
 
 ### Local Development
 
 ```bash
 # Clone and build
-git clone https://github.com/xinaps-dev/pi-web-scout.git
-cd pi-web-scout
+git clone https://github.com/xinaps-dev/pi-web-search-and-fetch.git
+cd pi-web-search-and-fetch
 pnpm install
 
 # Run locally in pi
@@ -61,7 +61,7 @@ Run `/ws` inside `pi` to open the interactive TUI Control Panel:
 
 ```text
 ┌───────────────────────────────────────────────────────────┐
-│  🌐 Web Scout - Control Panel                             │
+│  🌐 Web Search and Fetch - Control Panel                             │
 ├───────────────────────────────────────────────────────────┤
 │  [✓] Search (web_search)          : ON  (Provider: exa)   │
 │  [✓] Fetch (web_fetch)           : ON  (Provider: exa)   │
@@ -79,11 +79,27 @@ Run `/ws` inside `pi` to open the interactive TUI Control Panel:
 - **Toggle / Select:** Press `Space` or `Enter` to toggle tools or trigger configuration wizards.
 - **Close:** Press `Esc` or select `Exit`.
 
+### Text-Mode Subcommands
+
+Prefer the keyboard? Every hub action is also available as a direct command:
+
+```text
+/ws                            Open the interactive control hub
+/ws status                     Show the detailed status report
+/ws search on|off              Enable/disable web_search
+/ws fetch on|off               Enable/disable web_fetch
+/ws deep on|off                Enable/disable web_deep_search
+/ws provider <tool> <id|none>  Assign a provider (tool: search|fetch|deep)
+/ws provider                   Interactive provider assignment wizard
+/ws config [providerId]        Configure a provider (e.g. Exa API key)
+/ws help                       Show usage help
+```
+
 ---
 
 ## 🛠️ Standardized LLM Tools
 
-`pi-web-scout` registers 3 powerful tools with the Pi agent harness:
+`pi-web-search-and-fetch` registers 3 powerful tools with the Pi agent harness:
 
 ### 1. `web_search` *(Enabled by default)*
 Performs real-time web searches and returns structured results with titles, URLs, snippets, publication dates, and citations.
@@ -91,32 +107,42 @@ Performs real-time web searches and returns structured results with titles, URLs
 | Parameter | Type | Required | Description |
 | :--- | :--- | :--- | :--- |
 | `query` | `string` | **Yes** | Search keywords or natural language question |
-| `numResults` | `number` | No | Number of results to return (default: `8`) |
-| `category` | `string` | No | Content category (`company`, `research paper`, `news`, `github`, `pdf`, `tweet`, `financial report`) |
+| `numResults` | `number` | No | Number of results to return (default: `10`) |
+| `category` | `string` | No | Content category (`company`, `research_paper`, `news`, `pdf`, `github`, `tweet`, `personal_site`) |
+| `includeDomains` | `string[]` | No | Restrict results to these domains |
+| `excludeDomains` | `string[]` | No | Exclude these domains from the results |
+| `startPublishedDate` | `string` | No | Only return results published on or after this ISO date |
+| `endPublishedDate` | `string` | No | Only return results published on or before this ISO date |
+| `similarUrl` | `string` | No | When provided, returns pages similar to that URL (Exa find-similar) |
 
 ### 2. `web_fetch` *(Enabled by default)*
-Fetches full web page content from a known URL and converts it into clean, LLM-ready Markdown.
+Fetches full web page content from known URLs and converts it into clean, LLM-ready Markdown. Supports batch fetching of multiple pages in a single call.
 
 | Parameter | Type | Required | Description |
 | :--- | :--- | :--- | :--- |
-| `url` | `string` | **Yes** | Full HTTP/HTTPS URL to retrieve |
-| `maxCharacters` | `number` | No | Maximum character limit for extracted text (default: `15,000`) |
+| `urls` | `string \| string[]` | Yes* | One or multiple webpage URLs to fetch |
+| `url` | `string` | No | Single-URL compatibility alias for `urls` |
+| `maxCharacters` | `number` | No | Maximum extracted content length per page (default: `5,000`) |
 
-### 3. `web_deep_search` *(Optional)*
-Agentic multi-query web search for complex questions requiring parallel queries and comprehensive multi-source synthesis.
+\* At least one of `urls` or `url` must be provided.
+
+### 3. `web_deep_search` *(Optional — disabled by default)*
+Agentic multi-query web research that executes parallel queries and synthesizes multi-source findings, or answers directly via Exa's answer tool when available. Requires your own `EXA_API_KEY`. Enable it from the `/ws` hub or with `/ws deep on`.
 
 | Parameter | Type | Required | Description |
 | :--- | :--- | :--- | :--- |
 | `query` | `string` | **Yes** | Primary research question |
-| `numResults` | `number` | No | Results per query (default: `10`) |
-| `category` | `string` | No | Content filter category |
-| `additionalQueries`| `string[]` | No | Supplementary parallel sub-queries |
+| `numSources` | `number` | No | Reference sources to consult (default: `5`) |
+| `includeText` | `boolean` | No | Include text extracts from cited sources (default: `true`) |
+| `numResults` | `number` | No | Results per query; overrides `numSources` (default: `10`) |
+| `category` | `string` | No | Content category filter |
+| `additionalQueries` | `string[]` | No | Supplementary parallel sub-queries |
 
 ---
 
 ## ⚙️ Configuration & Key Storage
 
-### Extension Configuration: `~/.pi/agent/pi-web-scout.json`
+### Extension Configuration: `~/.pi/agent/pi-web-search-and-fetch.json`
 
 Persistent settings are stored cleanly in your agent directory:
 
@@ -161,11 +187,13 @@ API keys are read and stored using Pi's standard authentication store (`~/.pi/ag
    - Checks `~/.pi/agent/auth.json` (`exa.key`).
    - Falls back to `EXA_API_KEY` environment variable.
 
+Manage keys from pi with `/ws config exa` (or `/ws` → *Configure Active Provider*). Note that `web_deep_search` always requires its own API key: it is not available in the public free mode.
+
 ---
 
 ## 🧩 Provider Architecture
 
-`pi-web-scout` is designed with a fully decoupled capability model:
+`pi-web-search-and-fetch` is designed with a fully decoupled capability model:
 
 ```text
 ┌────────────────────────────────────────────────────────┐
@@ -189,7 +217,7 @@ import type {
   DeepSearchProvider,
   SearchResponse,
   FetchResponse,
-} from "pi-web-scout";
+} from "pi-web-search-and-fetch";
 
 export const myCustomProvider: ProviderModule = {
   id: "custom",
@@ -238,8 +266,8 @@ export const myCustomProvider: ProviderModule = {
 ## 🤝 `pi-requesty-provider` Smart Synergy
 
 When used alongside [`pi-requesty-provider`](https://github.com/xinaps-dev/pi-requesty-provider):
-1. `pi-web-scout` inspects `~/.pi/agent/pi-requesty.json` and evaluates the active session model on `session_start` and `model_select`.
-2. If Requesty has native search enabled (`nativeSearch: true`) in `pi-requesty-provider` and the active model supports server-side search grounding, `pi-web-scout` automatically suppresses `web_search` to prevent duplicate web queries and token waste.
+1. `pi-web-search-and-fetch` inspects `~/.pi/agent/pi-requesty.json` and evaluates the active session model on `session_start` and `model_select`.
+2. If Requesty has native search enabled (`nativeSearch: true`) in `pi-requesty-provider` and the active model supports server-side search grounding, `pi-web-search-and-fetch` automatically suppresses `web_search` to prevent duplicate web queries and token waste.
 3. `web_fetch` remains **fully active**, allowing your agent to extract and inspect complete web pages on demand.
 
 ---

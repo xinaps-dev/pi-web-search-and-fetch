@@ -5,7 +5,7 @@
  * (`ctx.hasUI`), the hub is shown as a keyboard-focused overlay
  * (`ctx.ui.custom`). It renders:
  *
- * - a bold title (`🌐 Web Scout - Control Panel`);
+ * - a bold title (`🌐 Web Search and Fetch - Control Panel`);
  * - a visual summary of the state of the three tools and their active
  *   providers, one line per tool:
  *
@@ -47,7 +47,7 @@ import {
 } from "@earendil-works/pi-tui";
 import type { Theme } from "@earendil-works/pi-coding-agent";
 import { TOOL_IDS } from "../config/constants.js";
-import type { PiWebScoutConfig } from "../config/types.js";
+import type { PiWebSearchAndFetchConfig } from "../config/types.js";
 import type {
   ToolStatus,
   WebSearchSuppression,
@@ -55,7 +55,7 @@ import type {
 } from "../types.js";
 
 /** Default hub title. */
-export const HUB_TITLE = "🌐 Web Scout - Control Panel";
+export const HUB_TITLE = "🌐 Web Search and Fetch - Control Panel";
 
 /** Identifiers of the default quick actions of the hub. */
 export const HUB_ACTION_IDS = {
@@ -357,7 +357,7 @@ const TOOL_LABELS: Record<WsToolId, string> = {
  * pass the suppression result to flag it in the summary.
  */
 export function buildHubToolStatuses(
-  config: PiWebScoutConfig,
+  config: PiWebSearchAndFetchConfig,
   suppression?: WebSearchSuppression
 ): ToolStatus[] {
   const statuses: ToolStatus[] = [

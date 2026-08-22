@@ -21,7 +21,7 @@ describe("tests/requesty.test.ts - Requesty Integration", () => {
   const prevAgentDir = process.env.PI_AGENT_DIR;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-scout-requesty-"));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-search-and-fetch-requesty-"));
     process.env.PI_AGENT_DIR = tmpDir;
   });
 

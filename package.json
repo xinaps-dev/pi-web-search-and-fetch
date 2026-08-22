@@ -1,7 +1,7 @@
 {
-  "name": "pi-web-scout",
-  "version": "1.0.0",
-  "description": "Web search and scout extension for pi coding agent",
+  "name": "pi-web-search-and-fetch",
+  "version": "1.0.1",
+  "description": "Web search and fetch extension for pi coding agent",
   "type": "module",
   "main": "index.ts",
   "types": "index.ts",
@@ -15,19 +15,19 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/xinaps-dev/pi-web-scout.git"
+    "url": "git+https://github.com/xinaps-dev/pi-web-search-and-fetch.git"
   },
   "bugs": {
-    "url": "https://github.com/xinaps-dev/pi-web-scout/issues"
+    "url": "https://github.com/xinaps-dev/pi-web-search-and-fetch/issues"
   },
-  "homepage": "https://github.com/xinaps-dev/pi-web-scout",
+  "homepage": "https://github.com/xinaps-dev/pi-web-search-and-fetch",
   "keywords": [
     "pi-package",
     "pi-extension",
     "pi",
     "pi-coding-agent",
     "web-search",
-    "web-scout",
+    "web-search-and-fetch",
     "coding-agent"
   ],
   "scripts": {

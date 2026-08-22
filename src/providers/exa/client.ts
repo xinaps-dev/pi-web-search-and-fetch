@@ -34,14 +34,19 @@ export const EXA_MCP_ENDPOINT = "https://mcp.exa.ai/mcp";
 export const EXA_API_KEY_QUERY_PARAM = "exaApiKey";
 
 /** Identity reported to the Exa MCP server during `initialize`. */
-const CLIENT_INFO = { name: "pi-web-scout", version: "1.0.0" };
+export const CLIENT_INFO = { name: "pi-web-search-and-fetch", version: "1.0.1" };
 
 /** Active singleton client, or `null` when none is connected. */
 let activeClient: Client | null = null;
 /** API key the active client was created with (`null` = public mode). */
 let activeApiKey: string | null = null;
-/** In-flight connection, so concurrent callers share one `connect()`. */
-let connecting: Promise<Client> | null = null;
+/**
+ * In-flight connection, so concurrent callers share one `connect()`.
+ * The resolved API key is recorded alongside the promise so a caller
+ * asking for a *different* credential never reuses a connection that was
+ * established with another key.
+ */
+let connecting: { apiKey: string | null; promise: Promise<Client> } | null = null;
 
 /**
  * Build the Exa MCP endpoint URL, appending the API key as the
@@ -169,9 +174,10 @@ async function resolveExaApiKey(): Promise<string | null> {
  * Get the singleton Exa MCP client, connecting lazily on first use.
  *
  * The resolved API key is part of the connection identity: when the key
- * changes (e.g. after `/ws exa` saves a new key or switches to public
- * mode) the previous connection is closed and a new one is established
- * so the query parameter always matches the current credential state.
+ * changes (e.g. after the `/ws` configuration modal saves a new key or
+ * switches to public mode) the previous connection is closed and a new one
+ * is established so the query parameter always matches the current
+ * credential state.
  *
  * The `initialize` handshake is wrapped in {@link withRetry} so transient
  * network failures (5xx, connection resets) are retried with exponential
@@ -185,7 +191,15 @@ export async function getExaClient(): Promise<Client> {
     return activeClient;
   }
   if (connecting !== null) {
-    return connecting;
+    // Share the in-flight connection only when it targets the same
+    // credential; otherwise wait for it to settle and re-evaluate.
+    if (connecting.apiKey === apiKey) {
+      return connecting.promise;
+    }
+    await connecting.promise.catch(() => {
+      // The competing connection failed; proceed with our own attempt.
+    });
+    return getExaClient();
   }
 
   const previous = activeClient;
@@ -224,7 +238,7 @@ export async function getExaClient(): Promise<Client> {
     activeApiKey = apiKey;
     return client;
   })();
-  connecting = promise;
+  connecting = { apiKey, promise };
   try {
     return await promise;
   } finally {
@@ -241,7 +255,7 @@ export async function closeExaClient(): Promise<void> {
   const pending = connecting;
   if (pending !== null) {
     try {
-      await pending;
+      await pending.promise;
     } catch {
       // The connection failed; there is nothing to close.
     }

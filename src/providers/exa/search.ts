@@ -402,11 +402,9 @@ export const exaSearchProvider: SearchProvider = {
       throw new Error("Exa find-similar aborted before start");
     }
 
-    const { toolName, arguments: toolArguments } = buildSearchToolInvocation(
-      url,
-      options
-    );
-    const numResults = (toolArguments.numResults as number) ?? EXA_SEARCH_DEFAULT_NUM_RESULTS;
+    const toolArguments = buildFindSimilarToolArguments(url, options);
+    const numResults =
+      (toolArguments.numResults as number) ?? EXA_SEARCH_DEFAULT_NUM_RESULTS;
 
     // Combine caller cancellation with an internal request timeout.
     const controller = new AbortController();
@@ -427,7 +425,7 @@ export const exaSearchProvider: SearchProvider = {
         async (): Promise<CallToolResult> => {
           const client = await getExaClient();
           const raw = await client.callTool(
-            { name: toolName, arguments: toolArguments },
+            { name: EXA_FIND_SIMILAR_TOOL, arguments: toolArguments },
             CallToolResultSchema,
             { signal: controller.signal, timeout: timeoutMs }
           );

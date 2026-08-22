@@ -9,7 +9,7 @@ import {
   runProviderConfigSelector,
 } from "../src/commands/config.js";
 import { getConfigPath } from "../src/config/index.js";
-import type { PiWebScoutConfig } from "../src/config/types.js";
+import type { PiWebSearchAndFetchConfig } from "../src/config/types.js";
 import { exaProviderModule } from "../src/providers/exa/index.js";
 import { ProviderRegistry } from "../src/providers/registry.js";
 import type {
@@ -132,8 +132,8 @@ function mockCtx(): MockCtx {
   };
 }
 
-/** Write a full `pi-web-scout.json` into the temp agent directory. */
-function writeConfig(config: PiWebScoutConfig): void {
+/** Write a full `pi-web-search-and-fetch.json` into the temp agent directory. */
+function writeConfig(config: PiWebSearchAndFetchConfig): void {
   fs.mkdirSync(process.env.PI_AGENT_DIR as string, { recursive: true });
   fs.writeFileSync(getConfigPath(), JSON.stringify(config), "utf8");
 }
@@ -148,7 +148,7 @@ function baseConfig(
     deepProvider: string;
     useApiKey: boolean;
   }> = {}
-): PiWebScoutConfig {
+): PiWebSearchAndFetchConfig {
   return {
     search: {
       enabled: overrides.searchEnabled ?? true,
@@ -171,7 +171,7 @@ describe("src/commands/config", () => {
   const prevAgentDir = process.env.PI_AGENT_DIR;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-scout-config-"));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-search-and-fetch-config-"));
     process.env.PI_AGENT_DIR = tmpDir;
   });
 

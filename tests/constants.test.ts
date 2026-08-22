@@ -4,7 +4,7 @@ import type { WsToolId } from "../src/types.js";
 
 describe("src/config/constants", () => {
   it("defines the config file name", () => {
-    expect(CONFIG_FILE_NAME).toBe("pi-web-scout.json");
+    expect(CONFIG_FILE_NAME).toBe("pi-web-search-and-fetch.json");
   });
 
   it("enables search by default with the exa provider", () => {

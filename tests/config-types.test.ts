@@ -2,14 +2,14 @@ import { describe, expect, expectTypeOf, it } from "vitest";
 import { DEFAULT_CONFIG } from "../src/config/constants.js";
 import type {
   ExaProviderConfig,
-  PiWebScoutConfig,
+  PiWebSearchAndFetchConfig,
   ProvidersConfig,
   WsToolConfig,
 } from "../src/config/types.js";
 
 describe("src/config/types", () => {
-  it("types the default config as PiWebScoutConfig", () => {
-    const config: PiWebScoutConfig = DEFAULT_CONFIG;
+  it("types the default config as PiWebSearchAndFetchConfig", () => {
+    const config: PiWebSearchAndFetchConfig = DEFAULT_CONFIG;
     expect(config.search).toEqual({ enabled: true, provider: "exa" });
     expect(config.fetch).toEqual({ enabled: true, provider: "exa" });
     expect(config.deepSearch).toEqual({ enabled: false, provider: "exa" });
@@ -23,7 +23,7 @@ describe("src/config/types", () => {
       deepSearch: { enabled: false, provider: "exa" },
       providers: { exa: { useApiKey: true } },
     };
-    const config: PiWebScoutConfig = raw;
+    const config: PiWebSearchAndFetchConfig = raw;
     expect(config.search.enabled).toBe(true);
     expect(config.fetch.provider).toBe("exa");
     expect(config.deepSearch.enabled).toBe(false);
@@ -42,16 +42,16 @@ describe("src/config/types", () => {
   });
 
   it("keeps the config structure exact (compile-time)", () => {
-    expectTypeOf<PiWebScoutConfig>().toHaveProperty("search");
-    expectTypeOf<PiWebScoutConfig>().toHaveProperty("fetch");
-    expectTypeOf<PiWebScoutConfig>().toHaveProperty("deepSearch");
-    expectTypeOf<PiWebScoutConfig>().toHaveProperty("providers");
-    expectTypeOf<PiWebScoutConfig["search"]>().toEqualTypeOf<WsToolConfig>();
-    expectTypeOf<PiWebScoutConfig["fetch"]>().toEqualTypeOf<WsToolConfig>();
-    expectTypeOf<PiWebScoutConfig["deepSearch"]>().toEqualTypeOf<WsToolConfig>();
+    expectTypeOf<PiWebSearchAndFetchConfig>().toHaveProperty("search");
+    expectTypeOf<PiWebSearchAndFetchConfig>().toHaveProperty("fetch");
+    expectTypeOf<PiWebSearchAndFetchConfig>().toHaveProperty("deepSearch");
+    expectTypeOf<PiWebSearchAndFetchConfig>().toHaveProperty("providers");
+    expectTypeOf<PiWebSearchAndFetchConfig["search"]>().toEqualTypeOf<WsToolConfig>();
+    expectTypeOf<PiWebSearchAndFetchConfig["fetch"]>().toEqualTypeOf<WsToolConfig>();
+    expectTypeOf<PiWebSearchAndFetchConfig["deepSearch"]>().toEqualTypeOf<WsToolConfig>();
     expectTypeOf<WsToolConfig>().toHaveProperty("enabled");
     expectTypeOf<WsToolConfig>().toHaveProperty("provider");
-    expectTypeOf<PiWebScoutConfig["providers"]>().toEqualTypeOf<ProvidersConfig>();
+    expectTypeOf<PiWebSearchAndFetchConfig["providers"]>().toEqualTypeOf<ProvidersConfig>();
     expectTypeOf<ProvidersConfig["exa"]>().toEqualTypeOf<ExaProviderConfig>();
     expectTypeOf<ExaProviderConfig>().toHaveProperty("useApiKey");
   });
