@@ -162,13 +162,6 @@ describe("src/commands/index /ws command handler", () => {
       expect(custom).toHaveBeenCalledTimes(1);
     });
 
-    it("opens the interactive hub regardless of extra arguments", async () => {
-      const { ctx, custom } = mockCtx();
-      const { pi } = mockPi();
-      await handleWsCommand(ctx, ["any", "args"], makeRegistry(), pi);
-      expect(custom).toHaveBeenCalledTimes(1);
-    });
-
     it("notifies an error when pi is not available", async () => {
       const { ctx, notify } = mockCtx();
       await handleWsCommand(ctx, [], makeRegistry());
@@ -177,6 +170,116 @@ describe("src/commands/index /ws command handler", () => {
       expect(type).toBe("error");
       expect(message).toContain(WS_USAGE);
       expect(message).toContain("the interactive Hub requires Pi's TUI");
+    });
+  });
+
+  describe("text-mode subcommands", () => {
+    it("shows the usage help via /ws help", async () => {
+      const { ctx, notify } = mockCtx();
+      const { pi } = mockPi();
+      await handleWsCommand(ctx, ["help"], makeRegistry(), pi);
+      expect(notify).toHaveBeenCalledTimes(1);
+      const [message, type] = notify.mock.calls[0] as [string, string];
+      expect(type).toBe("info");
+      expect(message).toContain("/ws status");
+      expect(message).toContain("/ws provider <tool> <id|none>");
+    });
+
+    it("notifies an error for unknown subcommands and shows the help", async () => {
+      const { ctx, notify } = mockCtx();
+      const { pi } = mockPi();
+      await handleWsCommand(ctx, ["any", "args"], makeRegistry(), pi);
+      expect(notify).toHaveBeenCalledTimes(1);
+      const [message, type] = notify.mock.calls[0] as [string, string];
+      expect(type).toBe("error");
+      expect(message).toContain('Unknown subcommand "any"');
+    });
+
+    it("toggles a tool off and on via /ws search off|on", async () => {
+      const { ctx, notify } = mockCtx();
+      const { pi, setActiveTools } = mockPi();
+
+      await handleWsCommand(ctx, ["search", "off"], makeRegistry(), pi);
+      const configPath = path.join(tmpDir, "pi-web-search-and-fetch.json");
+      const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
+      expect(config.search.enabled).toBe(false);
+
+      await handleWsCommand(ctx, ["search", "on"], makeRegistry(), pi);
+      const updated = JSON.parse(fs.readFileSync(configPath, "utf8"));
+      expect(updated.search.enabled).toBe(true);
+
+      // The active tools were re-synchronized after each toggle.
+      expect(setActiveTools).toHaveBeenCalledTimes(2);
+      expect(notify).toHaveBeenCalledTimes(2);
+    });
+
+    it("assigns a provider in text mode via /ws provider search exa", async () => {
+      const { ctx, notify } = mockCtx();
+      const { pi } = mockPi();
+
+      await handleWsCommand(ctx, ["provider", "search", "exa"], makeRegistry(), pi);
+      const configPath = path.join(tmpDir, "pi-web-search-and-fetch.json");
+      const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
+      expect(config.search.provider).toBe("exa");
+      expect(config.search.enabled).toBe(true);
+      expect(notify.mock.calls[0][0]).toContain('assigned to provider "exa"');
+    });
+
+    it("disables the tool while keeping the provider via /ws provider fetch none", async () => {
+      const { ctx } = mockCtx();
+      const { pi } = mockPi();
+
+      await handleWsCommand(ctx, ["provider", "fetch", "none"], makeRegistry(), pi);
+      const configPath = path.join(tmpDir, "pi-web-search-and-fetch.json");
+      const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
+      expect(config.fetch.enabled).toBe(false);
+      expect(config.fetch.provider).toBe("exa");
+    });
+
+    it("rejects an unknown provider id", async () => {
+      const { ctx, notify } = mockCtx();
+      const { pi } = mockPi();
+
+      await handleWsCommand(
+        ctx,
+        ["provider", "deep", "does-not-exist"],
+        makeRegistry(),
+        pi
+      );
+      expect(notify).toHaveBeenCalledTimes(1);
+      const [message, type] = notify.mock.calls[0] as [string, string];
+      expect(type).toBe("error");
+      expect(message).toContain('Unknown provider "does-not-exist"');
+    });
+
+    it("rejects a missing state argument with usage hint", async () => {
+      const { ctx, notify } = mockCtx();
+      const { pi } = mockPi();
+
+      await handleWsCommand(ctx, ["deep"], makeRegistry(), pi);
+      expect(notify).toHaveBeenCalledTimes(1);
+      const [message, type] = notify.mock.calls[0] as [string, string];
+      expect(type).toBe("error");
+      expect(message).toContain("Usage: /ws deep on|off");
+    });
+
+    it("shows the status report via /ws status", async () => {
+      const { ctx, notify } = mockCtx();
+      const { pi } = mockPi();
+
+      await handleWsCommand(ctx, ["status"], makeRegistry(), pi);
+      expect(notify).toHaveBeenCalledTimes(1);
+      const [message, type] = notify.mock.calls[0] as [string, string];
+      expect(type).toBe("info");
+      expect(message).toContain("Current Status");
+    });
+
+    it("requires the TUI for subcommands when pi is not available", async () => {
+      const { ctx, notify } = mockCtx();
+      await handleWsCommand(ctx, ["status"], makeRegistry());
+      expect(notify).toHaveBeenCalledTimes(1);
+      const [, type] = notify.mock.calls[0] as [string, string];
+      expect(type).toBe("error");
     });
   });
 });

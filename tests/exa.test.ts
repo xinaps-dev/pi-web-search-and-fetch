@@ -611,9 +611,9 @@ describe("src/providers/exa (tests/exa.test.ts)", () => {
       });
 
       expect(mockServer.toolCalls).toHaveLength(1);
-      expect(mockServer.toolCalls[0].name).toBe(EXA_SEARCH_TOOL);
+      expect(mockServer.toolCalls[0].name).toBe(EXA_FIND_SIMILAR_TOOL);
       expect(mockServer.toolCalls[0].arguments).toEqual({
-        query: "https://example.com/reference",
+        url: "https://example.com/reference",
         numResults: EXA_SEARCH_DEFAULT_NUM_RESULTS,
       });
       expect(response.query).toBe("https://example.com/reference");

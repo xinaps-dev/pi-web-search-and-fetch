@@ -79,6 +79,22 @@ Run `/ws` inside `pi` to open the interactive TUI Control Panel:
 - **Toggle / Select:** Press `Space` or `Enter` to toggle tools or trigger configuration wizards.
 - **Close:** Press `Esc` or select `Exit`.
 
+### Text-Mode Subcommands
+
+Prefer the keyboard? Every hub action is also available as a direct command:
+
+```text
+/ws                            Open the interactive control hub
+/ws status                     Show the detailed status report
+/ws search on|off              Enable/disable web_search
+/ws fetch on|off               Enable/disable web_fetch
+/ws deep on|off                Enable/disable web_deep_search
+/ws provider <tool> <id|none>  Assign a provider (tool: search|fetch|deep)
+/ws provider                   Interactive provider assignment wizard
+/ws config [providerId]        Configure a provider (e.g. Exa API key)
+/ws help                       Show usage help
+```
+
 ---
 
 ## 🛠️ Standardized LLM Tools
@@ -91,26 +107,36 @@ Performs real-time web searches and returns structured results with titles, URLs
 | Parameter | Type | Required | Description |
 | :--- | :--- | :--- | :--- |
 | `query` | `string` | **Yes** | Search keywords or natural language question |
-| `numResults` | `number` | No | Number of results to return (default: `8`) |
-| `category` | `string` | No | Content category (`company`, `research paper`, `news`, `github`, `pdf`, `tweet`, `financial report`) |
+| `numResults` | `number` | No | Number of results to return (default: `10`) |
+| `category` | `string` | No | Content category (`company`, `research_paper`, `news`, `pdf`, `github`, `tweet`, `personal_site`) |
+| `includeDomains` | `string[]` | No | Restrict results to these domains |
+| `excludeDomains` | `string[]` | No | Exclude these domains from the results |
+| `startPublishedDate` | `string` | No | Only return results published on or after this ISO date |
+| `endPublishedDate` | `string` | No | Only return results published on or before this ISO date |
+| `similarUrl` | `string` | No | When provided, returns pages similar to that URL (Exa find-similar) |
 
 ### 2. `web_fetch` *(Enabled by default)*
-Fetches full web page content from a known URL and converts it into clean, LLM-ready Markdown.
+Fetches full web page content from known URLs and converts it into clean, LLM-ready Markdown. Supports batch fetching of multiple pages in a single call.
 
 | Parameter | Type | Required | Description |
 | :--- | :--- | :--- | :--- |
-| `url` | `string` | **Yes** | Full HTTP/HTTPS URL to retrieve |
-| `maxCharacters` | `number` | No | Maximum character limit for extracted text (default: `15,000`) |
+| `urls` | `string \| string[]` | Yes* | One or multiple webpage URLs to fetch |
+| `url` | `string` | No | Single-URL compatibility alias for `urls` |
+| `maxCharacters` | `number` | No | Maximum extracted content length per page (default: `5,000`) |
 
-### 3. `web_deep_search` *(Optional)*
-Agentic multi-query web search for complex questions requiring parallel queries and comprehensive multi-source synthesis.
+\* At least one of `urls` or `url` must be provided.
+
+### 3. `web_deep_search` *(Optional — disabled by default)*
+Agentic multi-query web research that executes parallel queries and synthesizes multi-source findings, or answers directly via Exa's answer tool when available. Requires your own `EXA_API_KEY`. Enable it from the `/ws` hub or with `/ws deep on`.
 
 | Parameter | Type | Required | Description |
 | :--- | :--- | :--- | :--- |
 | `query` | `string` | **Yes** | Primary research question |
-| `numResults` | `number` | No | Results per query (default: `10`) |
-| `category` | `string` | No | Content filter category |
-| `additionalQueries`| `string[]` | No | Supplementary parallel sub-queries |
+| `numSources` | `number` | No | Reference sources to consult (default: `5`) |
+| `includeText` | `boolean` | No | Include text extracts from cited sources (default: `true`) |
+| `numResults` | `number` | No | Results per query; overrides `numSources` (default: `10`) |
+| `category` | `string` | No | Content category filter |
+| `additionalQueries` | `string[]` | No | Supplementary parallel sub-queries |
 
 ---
 
@@ -160,6 +186,8 @@ API keys are read and stored using Pi's standard authentication store (`~/.pi/ag
 2. **Authenticated Tier:** If `useApiKey: true`:
    - Checks `~/.pi/agent/auth.json` (`exa.key`).
    - Falls back to `EXA_API_KEY` environment variable.
+
+Manage keys from pi with `/ws config exa` (or `/ws` → *Configure Active Provider*). Note that `web_deep_search` always requires its own API key: it is not available in the public free mode.
 
 ---
 

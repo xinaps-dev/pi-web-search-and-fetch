@@ -326,7 +326,7 @@ export const exaDeepSearchProvider: DeepSearchProvider = {
     if (apiKey === null) {
       throw new Error(
         "Exa deep search requires its own Exa API key (the public free " +
-          "mode is not supported). Store a key with `/ws exa` or set the " +
+          "mode is not supported). Store a key with `/ws config` (Exa) or set " +
           "EXA_API_KEY environment variable."
       );
     }
@@ -431,7 +431,7 @@ export const exaDeepSearchProvider: DeepSearchProvider = {
     if (apiKey === null) {
       throw new Error(
         "Exa answer requires its own Exa API key (the public free " +
-          "mode is not supported). Store a key with `/ws exa` or set the " +
+          "mode is not supported). Store a key with `/ws config` (Exa) or set " +
           "EXA_API_KEY environment variable."
       );
     }
@@ -511,6 +511,10 @@ export const exaDeepSearchProvider: DeepSearchProvider = {
       }
 
       // Fallback: multi-query deep search synthesis.
+      // The still-running outer timeout controller is passed as the caller
+      // signal, so the fallback inherits the remaining answer budget
+      // (effective deadline = min(remaining, deepSearch's own 60s)) and can
+      // never outlive the original request window.
       const synthesized = await exaDeepSearchProvider.deepSearch(
         query,
         { ...options, numResults: numSources, includeText },

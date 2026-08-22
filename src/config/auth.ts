@@ -110,12 +110,19 @@ export function getExaApiKey(useApiKeyRequested: boolean): string | null {
 /**
  * Persist the credential store to `auth.json` with secure `0o600`
  * permissions, creating the agent directory when needed.
+ *
+ * The file is created directly with mode `0o600` so the secret is never
+ * readable by other users, even for an instant; `chmodSync` afterwards
+ * tightens permissions when the file already existed with wider ones.
  */
 function writeAuthStore(store: Record<string, StoredCredential>): void {
   const agentDir = getAgentDir();
   fs.mkdirSync(agentDir, { recursive: true });
   const filePath = getAuthFilePath();
-  fs.writeFileSync(filePath, JSON.stringify(store, null, 2) + "\n", "utf8");
+  fs.writeFileSync(filePath, JSON.stringify(store, null, 2) + "\n", {
+    encoding: "utf8",
+    mode: 0o600,
+  });
   fs.chmodSync(filePath, 0o600);
 }
 
