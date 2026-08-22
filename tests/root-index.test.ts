@@ -4,7 +4,7 @@ import rootExtension from "../index.js";
 import { default as srcExtension } from "../src/index.js";
 
 describe("root index.ts", () => {
-  it("re-exports the pi-web-scout extension factory from src/index.ts by default", () => {
+  it("re-exports the pi-web-search-and-fetch extension factory from src/index.ts by default", () => {
     expect(typeof rootExtension).toBe("function");
     expect(rootExtension).toBe(srcExtension);
   });

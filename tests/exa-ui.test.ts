@@ -44,7 +44,7 @@ describe("src/providers/exa/ui", () => {
   const prevAgentDir = process.env.PI_AGENT_DIR;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-scout-exa-ui-"));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-search-and-fetch-exa-ui-"));
     process.env.PI_AGENT_DIR = tmpDir;
   });
 

@@ -135,7 +135,7 @@ describe("src/commands/index /ws command handler", () => {
   const prevExaApiKey = process.env.EXA_API_KEY;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-scout-ws-router-"));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-search-and-fetch-ws-router-"));
     process.env.PI_AGENT_DIR = tmpDir;
     delete process.env.EXA_API_KEY;
   });

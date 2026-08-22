@@ -16,7 +16,7 @@
  * is remembered for when the tool is re-enabled).
  *
  * After the three steps the wizard persists the changes to
- * `~/.pi/agent/pi-web-scout.json` (atomic write) and immediately
+ * `~/.pi/agent/pi-web-search-and-fetch.json` (atomic write) and immediately
  * re-synchronizes the active tools (`syncActiveTools`) so the
  * next turn already sees the updated tool set. If the user cancels any
  * step, no change is applied.
@@ -28,7 +28,7 @@ import type {
 } from "@earendil-works/pi-coding-agent";
 import { TOOL_IDS } from "../config/constants.js";
 import { getConfig, updateConfig } from "../config/index.js";
-import type { PiWebScoutConfig } from "../config/types.js";
+import type { PiWebSearchAndFetchConfig } from "../config/types.js";
 import type { ProviderRegistry } from "../providers/registry.js";
 import type { WsToolId } from "../types.js";
 import { syncActiveTools } from "../tools/sync.js";
@@ -116,7 +116,7 @@ export function buildProviderSelectorSteps(
  * Run the 3-step provider selector wizard.
  *
  * Prompts one `ctx.ui.select` dialog per tool, persists the collected
- * selections to `pi-web-scout.json` (atomic write) and immediately
+ * selections to `pi-web-search-and-fetch.json` (atomic write) and immediately
  * re-synchronizes the active tools via `syncActiveTools`.
  *
  * @param ctx Command context providing `ui.select` / `ui.notify` and the
@@ -172,15 +172,15 @@ export async function runProviderSelector(
 }
 
 /**
- * Persist the collected selections to `pi-web-scout.json`:
+ * Persist the collected selections to `pi-web-search-and-fetch.json`:
  * a chosen provider enables the tool and assigns the provider; `none`
  * disables the tool while keeping its current provider id.
  */
 async function applySelections(
   selections: ProviderSelection[]
-): Promise<PiWebScoutConfig> {
+): Promise<PiWebSearchAndFetchConfig> {
   const config = await getConfig();
-  const partial: Partial<PiWebScoutConfig> = {};
+  const partial: Partial<PiWebSearchAndFetchConfig> = {};
 
   for (const selection of selections) {
     const current = config[selection.section];

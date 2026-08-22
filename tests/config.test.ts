@@ -22,7 +22,7 @@ import {
   getConfigPath,
   updateConfig,
 } from "../src/config/index.js";
-import type { PiWebScoutConfig } from "../src/config/types.js";
+import type { PiWebSearchAndFetchConfig } from "../src/config/types.js";
 
 describe("tests/config.test.ts - Configuration and Credentials Management", () => {
   let tmpDir: string;
@@ -30,7 +30,7 @@ describe("tests/config.test.ts - Configuration and Credentials Management", () =
   const prevExaKey = process.env.EXA_API_KEY;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-scout-config-test-"));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-search-and-fetch-config-test-"));
     process.env.PI_AGENT_DIR = tmpDir;
     delete process.env.EXA_API_KEY;
   });
@@ -51,7 +51,7 @@ describe("tests/config.test.ts - Configuration and Credentials Management", () =
 
   describe("Constants and Paths", () => {
     it("exports the expected default configuration structure", () => {
-      expect(CONFIG_FILE_NAME).toBe("pi-web-scout.json");
+      expect(CONFIG_FILE_NAME).toBe("pi-web-search-and-fetch.json");
       expect(AUTH_FILE_NAME).toBe("auth.json");
       expect(EXA_PROVIDER_KEY).toBe("exa");
 
@@ -71,13 +71,13 @@ describe("tests/config.test.ts - Configuration and Credentials Management", () =
 
     it("resolves the agent directory using PI_AGENT_DIR override or default path", () => {
       expect(getAgentDir()).toBe(tmpDir);
-      expect(getConfigPath()).toBe(path.join(tmpDir, "pi-web-scout.json"));
+      expect(getConfigPath()).toBe(path.join(tmpDir, "pi-web-search-and-fetch.json"));
       expect(getAuthFilePath()).toBe(path.join(tmpDir, "auth.json"));
 
       delete process.env.PI_AGENT_DIR;
       expect(getAgentDir()).toBe(path.join(os.homedir(), ".pi", "agent"));
       expect(getConfigPath()).toBe(
-        path.join(os.homedir(), ".pi", "agent", "pi-web-scout.json")
+        path.join(os.homedir(), ".pi", "agent", "pi-web-search-and-fetch.json")
       );
       expect(getAuthFilePath()).toBe(
         path.join(os.homedir(), ".pi", "agent", "auth.json")
@@ -86,28 +86,28 @@ describe("tests/config.test.ts - Configuration and Credentials Management", () =
     });
   });
 
-  describe("Extension Configuration (pi-web-scout.json)", () => {
+  describe("Extension Configuration (pi-web-search-and-fetch.json)", () => {
     describe("Reading Configuration (getConfig)", () => {
-      it("returns default configuration when pi-web-scout.json does not exist", async () => {
+      it("returns default configuration when pi-web-search-and-fetch.json does not exist", async () => {
         const config = await getConfig();
         expect(config).toEqual(DEFAULT_CONFIG);
         // Ensure returning a fresh cloned copy without mutations
         expect(config).not.toBe(DEFAULT_CONFIG);
       });
 
-      it("returns default configuration when pi-web-scout.json is empty", async () => {
+      it("returns default configuration when pi-web-search-and-fetch.json is empty", async () => {
         fs.writeFileSync(getConfigPath(), "", "utf8");
         const config = await getConfig();
         expect(config).toEqual(DEFAULT_CONFIG);
       });
 
-      it("returns default configuration when pi-web-scout.json contains invalid JSON", async () => {
+      it("returns default configuration when pi-web-search-and-fetch.json contains invalid JSON", async () => {
         fs.writeFileSync(getConfigPath(), "{ invalid: json", "utf8");
         const config = await getConfig();
         expect(config).toEqual(DEFAULT_CONFIG);
       });
 
-      it("returns default configuration when pi-web-scout.json is not an object (primitive or array)", async () => {
+      it("returns default configuration when pi-web-search-and-fetch.json is not an object (primitive or array)", async () => {
         fs.writeFileSync(getConfigPath(), JSON.stringify([1, 2, 3]), "utf8");
         expect(await getConfig()).toEqual(DEFAULT_CONFIG);
 
@@ -150,7 +150,7 @@ describe("tests/config.test.ts - Configuration and Credentials Management", () =
       });
 
       it("loads a completely populated configuration file accurately", async () => {
-        const fullConfig: PiWebScoutConfig = {
+        const fullConfig: PiWebSearchAndFetchConfig = {
           search: { enabled: false, provider: "brave" },
           fetch: { enabled: true, provider: "jina" },
           deepSearch: { enabled: true, provider: "exa" },

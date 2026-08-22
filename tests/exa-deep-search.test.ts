@@ -194,7 +194,7 @@ describe("src/providers/exa/deep-search", () => {
   const prevTimeoutMs = process.env.EXA_DEEP_SEARCH_TIMEOUT_MS;
 
   beforeEach(async () => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-scout-exa-deep-"));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "pi-web-search-and-fetch-exa-deep-"));
     process.env.PI_AGENT_DIR = tmpDir;
     delete process.env.EXA_API_KEY;
     delete process.env.EXA_DEEP_SEARCH_TIMEOUT_MS;
@@ -246,7 +246,7 @@ describe("src/providers/exa/deep-search", () => {
     it("rejects when useApiKey is disabled even with a key stored", async () => {
       enableApiKey();
       fs.writeFileSync(
-        path.join(tmpDir, "pi-web-scout.json"),
+        path.join(tmpDir, "pi-web-search-and-fetch.json"),
         JSON.stringify({ providers: { exa: { useApiKey: false } } })
       );
 
