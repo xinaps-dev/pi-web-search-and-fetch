@@ -3,6 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/pi-web-search-and-fetch?color=blue&logo=npm)](https://www.npmjs.com/package/pi-web-search-and-fetch)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![pi Extension](https://img.shields.io/badge/pi-extension-purple.svg)](https://pi.dev)
+[![pi 1.0.3 Verified](https://img.shields.io/badge/pi-1.0.3%20verified-teal.svg)](https://github.com/xinaps-dev/pi-web-search-and-fetch)
 
 > **Empower your [pi](https://pi.dev) coding agent with real-time web intelligence: instant neural search, clean Markdown page extraction, and autonomous deep research.**
 
@@ -20,6 +21,14 @@
 - 🔌 **Decoupled Multi-Provider Architecture** — Independent capability interfaces (`SearchProvider`, `FetchProvider`, `DeepSearchProvider`). Mix and match providers freely or implement custom engines with minimal boilerplate.
 - 🤝 **Smart `pi-requesty-provider` Synergy** — Automatically coordinates with `pi-requesty-provider` to detect native server-side search models, preventing duplicate searches while keeping markdown extraction active.
 - 🔒 **Secure Credential Management** — Stores API keys safely in `~/.pi/agent/auth.json` with strict `0o600` file permissions.
+
+---
+
+## ✅ Compatibility
+
+This extension is **compatible with and verified against [pi](https://pi.dev) `1.0.3`** — the latest stable release. The full test suite and the TypeScript typecheck pass against pi `1.0.3`.
+
+The supported peer dependency range is `^0.84 || ^1.0.0`, so it works with both the `0.84.x` and `1.0.x` lines of pi.
 
 ---
 

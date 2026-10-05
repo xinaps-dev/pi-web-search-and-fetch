@@ -19,7 +19,7 @@ import type {
   SearchProvider,
   SearchResponse,
 } from "../src/providers/types.js";
-import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
+import type { ExtensionToolContext } from "@earendil-works/pi-coding-agent";
 import type { PiWebSearchAndFetchConfig } from "../src/config/types.js";
 import {
   SECURITY_NOTICE_PREFIX,
@@ -126,7 +126,7 @@ async function executeTool(
     params,
     controller.signal,
     undefined,
-    undefined as unknown as ExtensionContext
+    undefined as unknown as ExtensionToolContext
   );
 }
 
@@ -320,7 +320,7 @@ describe("src/tools/web-search", () => {
         { query: "cancel me" },
         controller.signal,
         undefined,
-        undefined as unknown as ExtensionContext
+        undefined as unknown as ExtensionToolContext
       );
 
       expect(searchMock).toHaveBeenCalledWith(

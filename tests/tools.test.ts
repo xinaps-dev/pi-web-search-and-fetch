@@ -2,7 +2,7 @@ import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
+import type { ExtensionToolContext } from "@earendil-works/pi-coding-agent";
 import type { PiWebSearchAndFetchConfig } from "../src/config/types.js";
 import { TOOL_IDS } from "../src/config/constants.js";
 import { ProviderRegistry } from "../src/providers/registry.js";
@@ -242,7 +242,7 @@ describe("src/tools (tests/tools.test.ts)", () => {
           { query: "TypeScript 5.8 features" },
           controller.signal,
           undefined,
-          undefined as unknown as ExtensionContext
+          undefined as unknown as ExtensionToolContext
         );
 
         expect(searchMock).toHaveBeenCalledTimes(1);
@@ -315,7 +315,7 @@ describe("src/tools (tests/tools.test.ts)", () => {
           params,
           undefined,
           undefined,
-          undefined as unknown as ExtensionContext
+          undefined as unknown as ExtensionToolContext
         );
 
         expect(searchMock).toHaveBeenCalledWith(
@@ -375,7 +375,7 @@ describe("src/tools (tests/tools.test.ts)", () => {
             { query: "abort search" },
             controller.signal,
             undefined,
-            undefined as unknown as ExtensionContext
+            undefined as unknown as ExtensionToolContext
           )
         ).rejects.toThrow("Search aborted by user");
       });
@@ -408,7 +408,7 @@ describe("src/tools (tests/tools.test.ts)", () => {
             { query: "fail" },
             undefined,
             undefined,
-            undefined as unknown as ExtensionContext
+            undefined as unknown as ExtensionToolContext
           )
         ).rejects.toThrow("Exa network error");
       });
@@ -425,7 +425,7 @@ describe("src/tools (tests/tools.test.ts)", () => {
             { query: "test" },
             undefined,
             undefined,
-            undefined as unknown as ExtensionContext
+            undefined as unknown as ExtensionToolContext
           )
         ).rejects.toThrow(/Unknown provider "non-existent" for capability "search"/);
       });
@@ -598,7 +598,7 @@ describe("src/tools (tests/tools.test.ts)", () => {
           { urls: "https://example.com/documentation" },
           controller.signal,
           undefined,
-          undefined as unknown as ExtensionContext
+          undefined as unknown as ExtensionToolContext
         );
 
         expect(fetchMock).toHaveBeenCalledTimes(1);
@@ -658,7 +658,7 @@ describe("src/tools (tests/tools.test.ts)", () => {
           { urls: ["https://a.com/one", "https://b.com/two"] },
           undefined,
           undefined,
-          undefined as unknown as ExtensionContext
+          undefined as unknown as ExtensionToolContext
         );
 
         expect(fetchMock).toHaveBeenCalledTimes(1);
@@ -720,7 +720,7 @@ describe("src/tools (tests/tools.test.ts)", () => {
           params,
           undefined,
           undefined,
-          undefined as unknown as ExtensionContext
+          undefined as unknown as ExtensionToolContext
         );
 
         expect(fetchMock).toHaveBeenCalledWith(
@@ -770,7 +770,7 @@ describe("src/tools (tests/tools.test.ts)", () => {
             { urls: "https://example.com" },
             controller.signal,
             undefined,
-            undefined as unknown as ExtensionContext
+            undefined as unknown as ExtensionToolContext
           )
         ).rejects.toThrow("Fetch cancelled");
       });
@@ -803,7 +803,7 @@ describe("src/tools (tests/tools.test.ts)", () => {
             { urls: "https://example.com/404" },
             undefined,
             undefined,
-            undefined as unknown as ExtensionContext
+            undefined as unknown as ExtensionToolContext
           )
         ).rejects.toThrow("HTTP 404 Not Found");
       });
@@ -820,7 +820,7 @@ describe("src/tools (tests/tools.test.ts)", () => {
             { urls: "https://example.com" },
             undefined,
             undefined,
-            undefined as unknown as ExtensionContext
+            undefined as unknown as ExtensionToolContext
           )
         ).rejects.toThrow(/Unknown provider "unknown-fetch" for capability "fetch"/);
       });
@@ -956,7 +956,7 @@ describe("src/tools (tests/tools.test.ts)", () => {
           { query: "Quantum error correction surface codes" },
           controller.signal,
           undefined,
-          undefined as unknown as ExtensionContext
+          undefined as unknown as ExtensionToolContext
         );
 
         expect(deepSearchMock).toHaveBeenCalledTimes(1);
@@ -1025,7 +1025,7 @@ describe("src/tools (tests/tools.test.ts)", () => {
           { query: "direct question" },
           undefined,
           undefined,
-          undefined as unknown as ExtensionContext
+          undefined as unknown as ExtensionToolContext
         );
 
         expect(answerMock).toHaveBeenCalledTimes(1);
@@ -1086,7 +1086,7 @@ describe("src/tools (tests/tools.test.ts)", () => {
           params,
           undefined,
           undefined,
-          undefined as unknown as ExtensionContext
+          undefined as unknown as ExtensionToolContext
         );
 
         expect(deepSearchMock).toHaveBeenCalledWith(
@@ -1142,7 +1142,7 @@ describe("src/tools (tests/tools.test.ts)", () => {
             { query: "cancelled deep query" },
             controller.signal,
             undefined,
-            undefined as unknown as ExtensionContext
+            undefined as unknown as ExtensionToolContext
           )
         ).rejects.toThrow("Deep search cancelled");
       });
@@ -1175,7 +1175,7 @@ describe("src/tools (tests/tools.test.ts)", () => {
             { query: "test" },
             undefined,
             undefined,
-            undefined as unknown as ExtensionContext
+            undefined as unknown as ExtensionToolContext
           )
         ).rejects.toThrow("Deep search requires an Exa API key");
       });
@@ -1193,7 +1193,7 @@ describe("src/tools (tests/tools.test.ts)", () => {
             { query: "test" },
             undefined,
             undefined,
-            undefined as unknown as ExtensionContext
+            undefined as unknown as ExtensionToolContext
           )
         ).rejects.toThrow(/Unknown provider "unregistered-deep" for capability "deep-search"/);
       });
@@ -1360,21 +1360,21 @@ describe("src/tools (tests/tools.test.ts)", () => {
         { query: "test search" },
         undefined,
         undefined,
-        undefined as unknown as ExtensionContext
+        undefined as unknown as ExtensionToolContext
       );
       const fetchRes = await fetchTool.execute(
         "f-1",
         { urls: "https://example.com" },
         undefined,
         undefined,
-        undefined as unknown as ExtensionContext
+        undefined as unknown as ExtensionToolContext
       );
       const deepRes = await deepTool.execute(
         "d-1",
         { query: "test deep" },
         undefined,
         undefined,
-        undefined as unknown as ExtensionContext
+        undefined as unknown as ExtensionToolContext
       );
 
       expect(searchRes.details.provider).toBe("search-only-provider");
@@ -1438,21 +1438,21 @@ describe("src/tools (tests/tools.test.ts)", () => {
           { query: "disk query" },
           undefined,
           undefined,
-          undefined as unknown as ExtensionContext
+          undefined as unknown as ExtensionToolContext
         );
         const fRes = await fetchTool.execute(
           "f-default",
           { urls: "https://example.com/disk" },
           undefined,
           undefined,
-          undefined as unknown as ExtensionContext
+          undefined as unknown as ExtensionToolContext
         );
         const dRes = await deepTool.execute(
           "d-default",
           { query: "disk deep" },
           undefined,
           undefined,
-          undefined as unknown as ExtensionContext
+          undefined as unknown as ExtensionToolContext
         );
 
         expect(searchMock).toHaveBeenCalledWith(
